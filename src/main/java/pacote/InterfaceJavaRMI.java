@@ -4,9 +4,9 @@ package pacote;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-//Essa interface funciona como um contrato
+//Essa interface funciona como um contrato nela mostramos quais funções estamos disponibilizando
 public interface InterfaceJavaRMI extends Remote {
-    String helloWorld(String name) throws RemoteException;
+    String olaMundo(String name) throws RemoteException;
 }
 
 
