@@ -5,10 +5,10 @@ import java.rmi.server.UnicastRemoteObject;
 
 //Essa Classe implementa nossos métodos(funções) ela tem o UnicastRemoteObject pra conseguir compartilhar o método pelo Java RMI
 
-public class OlaMundoImplmentacao extends UnicastRemoteObject implements InterfaceJavaRMI {
+public class ClasseDeImplementacoes extends UnicastRemoteObject implements InterfaceJavaRMI {
 
     //Esse construtor não é muito necessário, mas dá erro as vezes quando tiramos ele
-    public OlaMundoImplmentacao() throws RemoteException {
+    public ClasseDeImplementacoes() throws RemoteException {
         super();
     }
 
