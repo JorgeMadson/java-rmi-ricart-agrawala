@@ -11,8 +11,14 @@ public class ClienteJavaRMI {
     {
         try
         {
+            //Observando nome dos servidores
+            String[] lista = Naming.list("");
+            for (String nome : lista) {
+                System.out.println(nome);
+            }
+            
             InterfaceJavaRMI ola = (InterfaceJavaRMI) Naming.lookup("Ola");
-            System.out.println("Resposta do servidor: "+ola.olaMundo("Teste"));
+            System.out.println("Resposta do servidor: "+ola.alerta("Teste"));
         }
         catch (MalformedURLException | NotBoundException | RemoteException e)
         {

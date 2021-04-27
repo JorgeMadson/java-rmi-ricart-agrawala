@@ -13,8 +13,8 @@ public class ClasseDeImplementacoes extends UnicastRemoteObject implements Inter
     }
 
     @Override
-    public String olaMundo(String name) throws RemoteException {
-        return "olaMundo:" + name;
+    public String alerta(String name) throws RemoteException {
+        return "alerta:" + name;
     }
 
 }

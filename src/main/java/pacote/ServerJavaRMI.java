@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-// O server serve a nossa função
+// O serve a nossa classe, preferi fazer os atributos e funções de forma estática
 
 public class ServerJavaRMI {
     static String NOME_SERVIDOR = "Ola";
