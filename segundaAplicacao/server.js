@@ -13,14 +13,18 @@ app.get('/clientesConectados', (requisicao, resposta) => resposta.json({clientes
 const PORT = 3000;
 
 let clientes = [];
-let fatos = [];
+let dadosEnviados = [];
 
 app.listen(PORT, () => {
-  console.log(`Serviço de Fatos de eventos ouvindo em http://localhost:${PORT}`)
+    console.log(`Ouvindo em http://localhost:${PORT}
+  Mostrados numero de clientes conectados em http://localhost:${PORT}/clientesConectados
+  Mostrados dados enviados em http://localhost:${PORT}/dadosEnviados
+  Para enviar use o index.html ou faça um post em http://localhost:${PORT}/enviarDados
+  `)
 })
 
 // 
-function eventsHandler(requisicao, resposta, proximo) {
+function manipuladorDeEventos(requisicao, resposta, proximo) {
   const headers = {
     'Content-Type': 'text/event-stream',
     'Connection': 'keep-alive',
@@ -28,7 +32,7 @@ function eventsHandler(requisicao, resposta, proximo) {
   };
   resposta.writeHead(200, headers);
 
-  const dado = `dados: ${JSON.stringify(fatos)}\n\n`;
+  const dado = `dados: ${JSON.stringify(dadosEnviados)}\n\n`;
 
   resposta.write(dado);
 
@@ -44,9 +48,23 @@ function eventsHandler(requisicao, resposta, proximo) {
 
   //Remove o cliente quando a conexão é fechada
   requisicao.on('close', () => {
-    console.log(`${clientId} Coneção fechada`);
+    console.log(`${clientId} Conexão fechada`);
     clientes = clientes.filter(client => client.id !== clientId);
   });
 }
 
-app.get('/eventos', eventsHandler);
+//endpoint que mostra os eventos
+app.get('/dadosEnviados', manipuladorDeEventos);
+
+function mandarEventosParaTodos(novoFato) {
+  clientes.forEach(cliente => cliente.resposta.write(`dados: ${JSON.stringify(novoFato)}\n\n`))
+}
+
+async function adicionarFatos(requisicao, resposta, next) {
+  const novoFato = requisicao.body;
+  dadosEnviados.push(novoFato);
+  resposta.json(novoFato)
+  return mandarEventosParaTodos(novoFato);
+}
+
+app.post('/enviarDados', adicionarFatos);
