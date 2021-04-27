@@ -10,16 +10,16 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 app.get('/clientesConectados', (requisicao, resposta) => resposta.json({clientes: clientes.length}));
 
-const PORT = 3000;
+const PORTA = 3000;
 
 let clientes = [];
 let dadosEnviados = [];
 
-app.listen(PORT, () => {
-    console.log(`Ouvindo em http://localhost:${PORT}
-  Mostrados numero de clientes conectados em http://localhost:${PORT}/clientesConectados
-  Mostrados dados enviados em http://localhost:${PORT}/dadosEnviados
-  Para enviar use o index.html ou faça um post em http://localhost:${PORT}/enviarDados
+app.listen(PORTA, () => {
+    console.log(`Ouvindo em http://localhost:${PORTA}
+  Mostrados numero de clientes conectados em http://localhost:${PORTA}/clientesConectados
+  Mostrados dados enviados em http://localhost:${PORTA}/dadosEnviados
+  Para enviar use o index.html ou faça um post em http://localhost:${PORTA}/enviarDados
   `)
 })
 
@@ -36,20 +36,20 @@ function manipuladorDeEventos(requisicao, resposta, proximo) {
 
   resposta.write(dado);
 
-  const clientId = Date.now();
+  const clienteId = Date.now();
 
-  const newClient = {
-    id: clientId,
+  const novoCliente = {
+    id: clienteId,
     resposta
   };
 
   //Cria um novo cliente quando a conexão é aberta
-  clientes.push(newClient);
+  clientes.push(novoCliente);
 
   //Remove o cliente quando a conexão é fechada
   requisicao.on('close', () => {
-    console.log(`${clientId} Conexão fechada`);
-    clientes = clientes.filter(client => client.id !== clientId);
+    console.log(`${clienteId} Conexão fechada`);
+    clientes = clientes.filter(client => client.id !== clienteId);
   });
 }
 
@@ -60,11 +60,11 @@ function mandarEventosParaTodos(novoFato) {
   clientes.forEach(cliente => cliente.resposta.write(`dados: ${JSON.stringify(novoFato)}\n\n`))
 }
 
-async function adicionarFatos(requisicao, resposta, next) {
+async function adicionarDados(requisicao, resposta, next) {
   const novoFato = requisicao.body;
   dadosEnviados.push(novoFato);
   resposta.json(novoFato)
   return mandarEventosParaTodos(novoFato);
 }
 
-app.post('/enviarDados', adicionarFatos);
+app.post('/enviarDados', adicionarDados);
