@@ -8,6 +8,21 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
+app.get('/', (requisicao, resposta) => {
+  const headers = {
+    'Content-Type': 'text/html'
+  };
+  resposta.writeHead(200, headers);
+
+  const instrucoes = `<p>Ouvindo em http://localhost:${PORTA}</p>
+  <p>Mostrados numero de peers conectados em <a href="http://localhost:${PORTA}/peersConectados">http://localhost:${PORTA}/peersConectados</p>
+  <p>Mostrados dados enviados em <a href="http://localhost:${PORTA}/dadosEnviados">http://localhost:${PORTA}/dadosEnviados</p>
+  <p>Para enviar use o index.html ou faca um post em <a href="http://localhost:${PORTA}/enviarDados">http://localhost:${PORTA}/enviarDados</p>
+  `
+
+  resposta.write(instrucoes);
+})
+
 app.get('/peersConectados', (requisicao, resposta) => resposta.json({peers: peers.length}));
 
 const PORTA = 3000;
@@ -24,7 +39,7 @@ app.listen(PORTA, () => {
 });
 
 // 
-function manipuladorDeEventos(requisicao, resposta, proximo) {
+function manipuladorSessaoCritica(requisicao, resposta, proximo) {
   const headers = {
     'Content-Type': 'text/event-stream',
     'Connection': 'keep-alive',
@@ -54,7 +69,7 @@ function manipuladorDeEventos(requisicao, resposta, proximo) {
 }
 
 //endpoint que mostra os eventos
-app.get('/dadosEnviados', manipuladorDeEventos);
+app.get('/dadosEnviados', manipuladorSessaoCritica);
 
 function mandarEventosParaTodos(novoFato) {
   peers.forEach(peer => peer.resposta.write(`dados: ${JSON.stringify(novoFato)}\n\n`));
