@@ -20,8 +20,8 @@ app.listen(PORTA, () => {
   Mostrados numero de clientes conectados em http://localhost:${PORTA}/clientesConectados
   Mostrados dados enviados em http://localhost:${PORTA}/dadosEnviados
   Para enviar use o index.html ou faça um post em http://localhost:${PORTA}/enviarDados
-  `)
-})
+  `);
+});
 
 // 
 function manipuladorDeEventos(requisicao, resposta, proximo) {
@@ -57,13 +57,13 @@ function manipuladorDeEventos(requisicao, resposta, proximo) {
 app.get('/dadosEnviados', manipuladorDeEventos);
 
 function mandarEventosParaTodos(novoFato) {
-  clientes.forEach(cliente => cliente.resposta.write(`dados: ${JSON.stringify(novoFato)}\n\n`))
+  clientes.forEach(cliente => cliente.resposta.write(`dados: ${JSON.stringify(novoFato)}\n\n`));
 }
 
-async function adicionarDados(requisicao, resposta, next) {
+async function adicionarDados(requisicao, resposta, proximo) {
   const novoFato = requisicao.body;
   dadosEnviados.push(novoFato);
-  resposta.json(novoFato)
+  resposta.json(novoFato);
   return mandarEventosParaTodos(novoFato);
 }
 

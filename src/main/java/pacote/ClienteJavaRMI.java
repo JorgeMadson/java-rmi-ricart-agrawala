@@ -18,7 +18,7 @@ public class ClienteJavaRMI {
             }
             
             InterfaceJavaRMI ola = (InterfaceJavaRMI) Naming.lookup("Ola");
-            System.out.println("Resposta do servidor: "+ola.alerta("Teste"));
+            System.out.println("Resposta do servidor: "+ola.alerta(1, "Teste"));
         }
         catch (MalformedURLException | NotBoundException | RemoteException e)
         {

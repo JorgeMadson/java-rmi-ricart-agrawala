@@ -1,5 +1,11 @@
 package pacote;
 import java.io.*;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 
 public class AlgoritmoRicartAgrawala {
 
@@ -8,13 +14,12 @@ public class AlgoritmoRicartAgrawala {
     public int maiorNumSeq;
     public int numSeq;
     public int carimboDeTempo;
-    //TODO: Fazer a comunicação pelo Java RMi
-    //public static String[] listaDeComunicacao;
+    //Comunicação pelo Java RMi
 
-    //Serão 3 nós pos agora
+    //Serão 3 nós por agora
     public int nosNoCanal = 3;
 
-    public boolean[] replyDeferred;
+    public boolean[] respostaAdiada;
 
     public AlgoritmoRicartAgrawala(int carimboDeTempo, int numSeq) {
         solicitandoCS = false;
@@ -24,22 +29,20 @@ public class AlgoritmoRicartAgrawala {
         maiorNumSeq = 0;
         this.numSeq = numSeq;
 
-        //TODO: Fazer a comunicação pelo Java RMi
-        //int quantidadeDeNosParaComunicar = listaDeComunicacao.length;
+        //Comunicação pelo Java RMi
         // 
-        //TODO: Fazer a comunicação pelo Java RMi
-        //listaDeComunicacao[quantidadeDeNosParaComunicar - 1] = nosNoCanal;
-        // Node number is also used for priority (low node # == higher priority in RicartAgrawala scheme)
-        // Node numbers are [1,nosNoCanal]; since we're starting at 1 check for errors trying to access node '0'.
+        //Comunicação pelo Java RMi
+        // Numeros do nó também é usado para prioridade (baixo nó # == maior prioridade no esquema RicartAgrawala)
+        // Numeros do nó são [1, nosNoCanal]; já que estamos começando em 1, verifique se há erros ao tentar acessar o nó '0'.
         this.carimboDeTempo = carimboDeTempo;
 
-        replyDeferred = new boolean[nosNoCanal];
+        respostaAdiada = new boolean[nosNoCanal];
     }
 
     /**
-     * Invocation (begun in driver module with request CS)
+     * invocacao (begun in driver module with request CS)
      */
-    public boolean invocation() {
+    public boolean invocacao() throws NotBoundException, MalformedURLException, RemoteException {
 
         solicitandoCS = true;
         numSeq = maiorNumSeq + 1;
@@ -48,7 +51,7 @@ public class AlgoritmoRicartAgrawala {
 
         for (int i = 1; i <= nosNoCanal + 1; i++) {
             if (i != carimboDeTempo) {
-                requestTo(numSeq, carimboDeTempo, i);
+                pedirAo(numSeq, carimboDeTempo, i);
             }
         }
 
@@ -59,38 +62,38 @@ public class AlgoritmoRicartAgrawala {
             } catch (Exception e) {
 
             }
-            /*wait until we have replies from all other processes */
+            /* espere até termos respostas de todos os outros processos */
         }
 
-        //We return when ready to enter CS
+        //Retornamos quando estivermos prontos para entrar no CS
         return true;
 
     }
 
-    // The other half of invocation
-    public void releaseCS() {
+    //A outra metade da invocação
+    public void liberarCS() throws NotBoundException, MalformedURLException, RemoteException {
         solicitandoCS = false;
 
         for (int i = 0; i < nosNoCanal; i++) {
-            if (replyDeferred[i]) {
-                replyDeferred[i] = false;
+            if (respostaAdiada[i]) {
+                respostaAdiada[i] = false;
                 if (i < (carimboDeTempo - 1)) {
-                    replyTo(i + 1);
+                    responderAo(i + 1);
                 } else {
-                    replyTo(i + 2);
+                    responderAo(i + 2);
                 }
             }
         }
     }
 
     /**
-     * Receiving Request
+     * Recebendo pedido
      *
-     * @param	recivedSeqNum	The incoming message's sequence number
-     * @param	recivedNudeNum	The incoming message's node number
+     * @param recivedSeqNum O número de sequência da mensagem recebida
+     * @param recivedNudeNum O número do nó da mensagem recebida
      *
      */
-    public void receiveRequest(int recivedSeqNum, int recivedNudeNum) {
+    public void receberPedido(int recivedSeqNum, int recivedNudeNum) throws NotBoundException, MalformedURLException, RemoteException {
         System.out.println("Received request from node " + recivedNudeNum);
         boolean bDefer = false;
 
@@ -99,44 +102,64 @@ public class AlgoritmoRicartAgrawala {
         if (bDefer) {
             System.out.println("Deferred sending message to " + recivedNudeNum);
             if (recivedNudeNum > carimboDeTempo) {
-                replyDeferred[recivedNudeNum - 2] = true;
+                respostaAdiada[recivedNudeNum - 2] = true;
             } else {
-                replyDeferred[recivedNudeNum - 1] = true;
+                respostaAdiada[recivedNudeNum - 1] = true;
             }
         } else {
             System.out.println("Sent reply message to " + recivedNudeNum);
-            replyTo(recivedNudeNum);
+            responderAo(recivedNudeNum);
         }
 
     }
 
     /**
-     * Receiving Replies
+     * Recebendo Respostas
      */
-    public void receiveReply() {
+    public void receberResposta() {
         respostasPendentes = Math.max((respostasPendentes - 1), 0);
         //System.out.println("Outstanding replies: " + respostasPendentes);
     }
 
-    public void replyTo(int recivedNudeNum) {
-        System.out.println("Sending REPLY to node " + recivedNudeNum);
+    public void responderAo(int recivedNudeNum) throws NotBoundException, MalformedURLException, RemoteException {
+        System.out.println("Sending RESPOSTA to node " + recivedNudeNum);
         if (recivedNudeNum > carimboDeTempo) {
-            //TODO: Fazer a comunicação pelo Java RMi
-            //listaDeComunicacao[recivedNudeNum-2].println("REPLY," + recivedNudeNum);
+            //Comunicação pelo Java RMi
+            InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup("Ola");
+            try {
+                interfaceRemota.alerta(recivedNudeNum-2, ("RESPOSTA," + recivedNudeNum));
+            } catch (RemoteException ex) {
+                Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
-            //TODO: Fazer a comunicação pelo Java RMi
-            //listaDeComunicacao[recivedNudeNum-1].println("REPLY," + recivedNudeNum);
+            //Comunicação pelo Java RMi
+            InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup("Ola");
+            try {
+                interfaceRemota.alerta(recivedNudeNum-1, ("RESPOSTA," + recivedNudeNum));
+            } catch (RemoteException ex) {
+                Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
-    public void requestTo(int numSeq, int carimboDeTempo, int i) {
-        System.out.println("Sending REQUEST to node " + (((i))));
+    public void pedirAo(int numSeq, int carimboDeTempo, int i) throws NotBoundException, MalformedURLException, RemoteException {
+        System.out.println("Sending PEDIDO to node " + (((i))));
         if (i > carimboDeTempo) {
-            //TODO: Fazer a comunicação pelo Java RMi
-            //listaDeComunicacao[i-2].println("REQUEST," + numSeq + "," + carimboDeTempo);
+            //Comunicação pelo Java RMi
+            InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup("Ola");
+            try {
+                interfaceRemota.alerta(i-2, ("PEDIDO," + numSeq + "," + carimboDeTempo));
+            } catch (RemoteException ex) {
+                Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
-            //TODO: Fazer a comunicação pelo Java RMi
-            //listaDeComunicacao[i-1].println("REQUEST," + numSeq + "," + carimboDeTempo);
+            //Comunicação pelo Java RMi
+            InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup("Ola");
+            try {
+                interfaceRemota.alerta(i-1, ("PEDIDO," + numSeq + "," + carimboDeTempo));
+            } catch (RemoteException ex) {
+                Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
