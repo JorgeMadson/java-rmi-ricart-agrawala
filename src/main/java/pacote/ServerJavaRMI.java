@@ -8,47 +8,54 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 // O serve a nossa classe, preferi fazer os atributos e funções de forma estática
-
 public class ServerJavaRMI {
+
     static String NOME_SERVIDOR = "Ola";
+    static String resposta;
+    static String servidorEstaAtivo = "Não ativo...";
+
     public static void main(String[] args) throws AlreadyBoundException, MalformedURLException {
+        iniciarServidor();
+    }
+
+    public static String listarServidores(String[] listaServerLigados) {
+
+        resposta = "Numero de servidores ativos: " + listaServerLigados.length + "\n";
+
+        for (String nomeServer : listaServerLigados) {
+
+            resposta = resposta + "Servidores:" + nomeServer + "\n";
+        }
+        return resposta;
+    }
+
+    public static void iniciarServidor() throws AlreadyBoundException {
         try {
 
             InterfaceJavaRMI implementacao = new ClasseDeImplementacoes();
 
-            //Caso queria mudar a porta em que vamos conectar, a padão é 1099
-            Registry registry = LocateRegistry.createRegistry(1099);
-            
-            String[] listaServerLigados = registry.list();
-            
-            listarServidores(listaServerLigados);
-            
-            if (listaServerLigados.length == 0) {
-                registry.bind(NOME_SERVIDOR, implementacao);
-            }
-            else {
-                //Recebe o servidor ativo da lista
-                registry = LocateRegistry.getRegistry(NOME_SERVIDOR);
-            }
-
-            //ToDo: Entender o Naming x Registry
+            //Dá pra usar o Naming e Registry
             //Caso registry não funcione, use o naming:
             //Naming.bind(NOME_SERVIDOR, ola);
 
-            
-            System.out.println("Servindo a classe OlaMundoImplmentacao");
-        }
-        catch (RemoteException e){
+            //Caso queria mudar a porta em que vamos conectar, a padrão é 1099
+            Registry registry = LocateRegistry.createRegistry(1099);
+
+            String[] listaServerLigados = registry.list();
+
+            System.out.println(listarServidores(listaServerLigados));
+
+            if (listaServerLigados.length == 0) {
+                registry.bind(ServerJavaRMI.NOME_SERVIDOR, implementacao);
+            } else {
+                //Recebe o servidor ativo da lista
+                registry = LocateRegistry.getRegistry(ServerJavaRMI.NOME_SERVIDOR);
+            }
+
+            servidorEstaAtivo = "Servindo classe ClasseDeImplementacoes";
+            System.out.println(servidorEstaAtivo);
+        } catch (RemoteException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void listarServidores(String[] listaServerLigados) {
-        System.out.println("Numero de servidores ligados: " + listaServerLigados.length);
-                
-            for (String nomeServer : listaServerLigados) {
-                
-                System.out.println("Servidores:" + nomeServer);
-            }
     }
 }
