@@ -8,16 +8,16 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-app.get('/clientesConectados', (requisicao, resposta) => resposta.json({clientes: clientes.length}));
+app.get('/peersConectados', (requisicao, resposta) => resposta.json({peers: peers.length}));
 
 const PORTA = 3000;
 
-let clientes = [];
+let peers = [];
 let dadosEnviados = [];
 
 app.listen(PORTA, () => {
     console.log(`Ouvindo em http://localhost:${PORTA}
-  Mostrados numero de clientes conectados em http://localhost:${PORTA}/clientesConectados
+  Mostrados numero de peers conectados em http://localhost:${PORTA}/peersConectados
   Mostrados dados enviados em http://localhost:${PORTA}/dadosEnviados
   Para enviar use o index.html ou faça um post em http://localhost:${PORTA}/enviarDados
   `);
@@ -36,20 +36,20 @@ function manipuladorDeEventos(requisicao, resposta, proximo) {
 
   resposta.write(dado);
 
-  const clienteId = Date.now();
+  const peerId = Date.now();
 
-  const novoCliente = {
-    id: clienteId,
+  const novopeer = {
+    id: peerId,
     resposta
   };
 
-  //Cria um novo cliente quando a conexão é aberta
-  clientes.push(novoCliente);
+  //Cria um novo peer quando a conexão é aberta
+  peers.push(novopeer);
 
-  //Remove o cliente quando a conexão é fechada
+  //Remove o peer quando a conexão é fechada
   requisicao.on('close', () => {
-    console.log(`${clienteId} Conexão fechada`);
-    clientes = clientes.filter(client => client.id !== clienteId);
+    console.log(`${peerId} Conexão fechada`);
+    peers = peers.filter(client => client.id !== peerId);
   });
 }
 
@@ -57,7 +57,7 @@ function manipuladorDeEventos(requisicao, resposta, proximo) {
 app.get('/dadosEnviados', manipuladorDeEventos);
 
 function mandarEventosParaTodos(novoFato) {
-  clientes.forEach(cliente => cliente.resposta.write(`dados: ${JSON.stringify(novoFato)}\n\n`));
+  peers.forEach(peer => peer.resposta.write(`dados: ${JSON.stringify(novoFato)}\n\n`));
 }
 
 async function adicionarDados(requisicao, resposta, proximo) {
