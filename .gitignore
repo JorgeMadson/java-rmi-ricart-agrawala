@@ -1,2 +1,5 @@
 segundaAplicacao/node_modules/
 /target/
+.project
+/.settings/
+.classpath

@@ -10,12 +10,12 @@ import java.rmi.registry.Registry;
 // O serve a nossa classe, preferi fazer os atributos e funções de forma estática
 public class ServerJavaRMI {
 
-    static String NOME_SERVIDOR = "Ola";
+    static String NOME_SERVIDOR = "Peer";
     static String resposta;
     static String servidorEstaAtivo = "Não ativo...";
 
     public static void main(String[] args) throws AlreadyBoundException, MalformedURLException {
-        iniciarServidor();
+        iniciarServidor("Teste");
     }
 
     public static String listarServidores(String[] listaServerLigados) {
@@ -29,7 +29,7 @@ public class ServerJavaRMI {
         return resposta;
     }
 
-    public static void iniciarServidor() throws AlreadyBoundException {
+    public static void iniciarServidor(String identificador) throws AlreadyBoundException {
         try {
 
             InterfaceJavaRMI implementacao = new ClasseDeImplementacoes();
@@ -46,10 +46,10 @@ public class ServerJavaRMI {
             System.out.println(listarServidores(listaServerLigados));
 
             if (listaServerLigados.length == 0) {
-                registry.bind(ServerJavaRMI.NOME_SERVIDOR, implementacao);
+                registry.bind(ServerJavaRMI.NOME_SERVIDOR  + identificador, implementacao);
             } else {
                 //Recebe o servidor ativo da lista
-                registry = LocateRegistry.getRegistry(ServerJavaRMI.NOME_SERVIDOR);
+                registry = LocateRegistry.getRegistry(ServerJavaRMI.NOME_SERVIDOR + identificador);
             }
 
             servidorEstaAtivo = "Servindo classe ClasseDeImplementacoes";

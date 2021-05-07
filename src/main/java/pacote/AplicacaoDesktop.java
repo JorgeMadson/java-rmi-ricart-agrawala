@@ -14,6 +14,7 @@ public class AplicacaoDesktop {
         //Encerra a aplicação quando fechado
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        //Botões
         JButton botaoRodarRicartAgrawala = new JButton("Rodar Algoritmo Ricart Agrawala");
 
         botaoRodarRicartAgrawala.setBounds(50, 50, 250, 40);//eixo x, eixo y, largura, altura
@@ -22,10 +23,11 @@ public class AplicacaoDesktop {
         labelStatusServidor.setBounds(50, 30, 250, 15);//eixo x, eixo y, largura, altura
         f.add(labelStatusServidor);
 
-        //Iniciando o servidor RMI
-        ServerJavaRMI.iniciarServidor();
         labelStatusServidor.setText(ServerJavaRMI.servidorEstaAtivo);
-
+        
+        //Levantar peers
+        AlgoritmoRicartAgrawala peer1 = new AlgoritmoRicartAgrawala(1, 1);
+        
         //Label mostrando os processos
         JLabel labelProcessosExecutando = new JLabel(ServerJavaRMI.resposta);
         labelProcessosExecutando.setBounds(50, 100, 250, 15);//eixo x, eixo y, largura, altura

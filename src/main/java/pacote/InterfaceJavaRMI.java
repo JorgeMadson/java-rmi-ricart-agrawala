@@ -11,4 +11,6 @@ public interface InterfaceJavaRMI extends Remote {
 }
 
 //O que é o?
-//Java RMI, ou seja, Remote Method Invocation, é uma API Java usada para implementar chamadas de procedimento remoto (RPC) (chamada de procedimento remoto), que pode transmitir diretamente objetos Java serializados e coleta de lixo distribuída. Sua implementação depende da Java Virtual Machine (JVM), portanto, ela só oferece suporte a chamadas de uma JVM para outra.
+//Java RMI, ou seja, Remote Method Invocation, é uma API Java usada para implementar chamadas de procedimento remoto (RPC) (chamada de procedimento remoto),
+//que pode transmitir diretamente objetos Java serializados e coleta de lixo distribuída. Sua implementação depende da Java Virtual Machine (JVM),
+//portanto, ela só oferece suporte a chamadas de uma JVM para outra.

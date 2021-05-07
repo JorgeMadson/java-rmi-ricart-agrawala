@@ -24,7 +24,7 @@ public class ClienteJavaRMI {
                 System.out.println(nome);
             }
 
-            InterfaceJavaRMI ola = (InterfaceJavaRMI) Naming.lookup("Ola");
+            InterfaceJavaRMI ola = (InterfaceJavaRMI) Naming.lookup("Peer1");
             AlgoritmoRicartAgrawala processo = new AlgoritmoRicartAgrawala(carimboDeTempo, numSeq);
             processo.invocacao();
             respostaServidor = "Resposta do servidor: " + ola.alerta(1, "Teste");

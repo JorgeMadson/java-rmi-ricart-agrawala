@@ -1,15 +1,16 @@
 package pacote;
 
-import java.io.*;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.net.MalformedURLException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 
 public class AlgoritmoRicartAgrawala {
 
+    private static final String NOME_PEER = "Peer1";
     public boolean solicitandoCS;
     public int respostasPendentes;
     public int maiorNumSeq;
@@ -38,6 +39,13 @@ public class AlgoritmoRicartAgrawala {
         this.carimboDeTempo = carimboDeTempo;
 
         respostaAdiada = new boolean[nosNoCanal];
+        
+        try {
+            //Iniciando o servidor RMI
+            ServerJavaRMI.iniciarServidor(String.valueOf(numSeq));
+        } catch (AlreadyBoundException ex) {
+            Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -53,7 +61,6 @@ public class AlgoritmoRicartAgrawala {
         for (int i = 1; i <= nosNoCanal + 1; i++) {
             if (i != carimboDeTempo) {
                 pedirAo(numSeq, carimboDeTempo, i);
-                respostasPendentes--;
             }
         }
 
@@ -127,7 +134,7 @@ public class AlgoritmoRicartAgrawala {
         System.out.println("enviado RESPOSTA ao no " + numNoRecebido);
         if (numNoRecebido > carimboDeTempo) {
             //Comunicação pelo Java RMi
-            InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup("Ola");
+            InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup(NOME_PEER);
             try {
                 interfaceRemota.alerta(numNoRecebido - 2, ("RESPOSTA," + numNoRecebido));
             } catch (RemoteException ex) {
@@ -135,7 +142,7 @@ public class AlgoritmoRicartAgrawala {
             }
         } else {
             //Comunicação pelo Java RMi
-            InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup("Ola");
+            InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup(NOME_PEER);
             try {
                 interfaceRemota.alerta(numNoRecebido - 1, ("RESPOSTA," + numNoRecebido));
             } catch (RemoteException ex) {
@@ -148,7 +155,7 @@ public class AlgoritmoRicartAgrawala {
         System.out.println("enviando PEDIDO ao no" + (((i))));
         if (i > carimboDeTempo) {
             //Comunicação pelo Java RMi
-            InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup("Ola");
+            InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup(NOME_PEER);
             try {
                 interfaceRemota.alerta(i - 2, ("PEDIDO," + numSeq + "," + carimboDeTempo));
             } catch (RemoteException ex) {
@@ -156,7 +163,7 @@ public class AlgoritmoRicartAgrawala {
             }
         } else {
             //Comunicação pelo Java RMi
-            InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup("Ola");
+            InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup(NOME_PEER);
             try {
                 interfaceRemota.alerta(i - 1, ("PEDIDO," + numSeq + "," + carimboDeTempo));
             } catch (RemoteException ex) {
