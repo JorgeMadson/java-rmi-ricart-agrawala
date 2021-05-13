@@ -15,21 +15,25 @@ public class ClasseParaTestesJavaRMI {
 
     public static void main(String[] args) throws MalformedURLException {
         
-        int carimboDeTempo = 0;
+        int meuId = 1;
         int numSeq = 1;
         int numeroDaPorta = 1099;
-        AlgoritmoRicartAgrawala peer1 = new AlgoritmoRicartAgrawala(carimboDeTempo, numSeq, numeroDaPorta);
-        AlgoritmoRicartAgrawala peer2 = new AlgoritmoRicartAgrawala(1, 2, 1100);
-        AlgoritmoRicartAgrawala peer3 = new AlgoritmoRicartAgrawala(2, 3, 1101);
+        AlgoritmoRicartAgrawala peer1 = new AlgoritmoRicartAgrawala(meuId, numSeq, numeroDaPorta);
+        AlgoritmoRicartAgrawala peer2 = new AlgoritmoRicartAgrawala(2, 2, 1100);
+        AlgoritmoRicartAgrawala peer3 = new AlgoritmoRicartAgrawala(3, 3, 1101);
 
         String[] todosOsPeersConectados;
         try {
-            todosOsPeersConectados = peer1.receberNomePeersNaRede();
-            
+            todosOsPeersConectados = peer1.receberNomePeersNaRede();            
             System.out.println(concatenarListaDeString(todosOsPeersConectados));
+            boolean entrandoNaSC = peer1.perguntarSePossoEntrarNaSC();
+            entrandoNaSC = peer2.perguntarSePossoEntrarNaSC();
+            entrandoNaSC = peer3.perguntarSePossoEntrarNaSC();
 
         } catch (RemoteException ex) {
             System.out.println(ex);
+            Logger.getLogger(ClasseParaTestesJavaRMI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
             Logger.getLogger(ClasseParaTestesJavaRMI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -43,12 +47,12 @@ public class ClasseParaTestesJavaRMI {
     }
 
     //Executa a interface remota
-    public static void executarInterfaceRemota(int carimboDeTempo, int numSeq, int numeroDaPorta) {
+    public static void executarInterfaceRemota(int meuId, int numSeq, int numeroDaPorta) {
         try {
             verQuemSaoOsProcessosAtivos();
 
             InterfaceJavaRMI ola = (InterfaceJavaRMI) Naming.lookup("Peer"+Integer.toString(numSeq));
-//            respostaServidor = "Resposta do servidor: " + ola.alerta(1, "Teste");
+//        respostaServidor = "Resposta do servidor: " + ola.alerta(1, "Teste");
             
         } catch (MalformedURLException | NotBoundException | RemoteException e) {
             System.out.println(e);

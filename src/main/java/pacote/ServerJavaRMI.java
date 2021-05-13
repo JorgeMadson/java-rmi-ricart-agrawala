@@ -23,7 +23,7 @@ public class ServerJavaRMI {
     public static String listarServidores(String[] listaServerLigados) {
 
         //Vê se existe algum servidor ativo
-        resposta = "Numero de servidores ativos: " + listaServerLigados.length + "\n";
+        resposta = "Numero de servidores ativos na porta: " + listaServerLigados.length + "\n";
 
         //Adiciona os servidores ativos a lista
         for (String nomeServer : listaServerLigados) {
