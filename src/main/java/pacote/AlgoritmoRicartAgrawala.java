@@ -7,6 +7,8 @@ import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 public class AlgoritmoRicartAgrawala {
 
@@ -37,14 +39,39 @@ public class AlgoritmoRicartAgrawala {
         this.carimboDeTempo = carimboDeTempo;
 
         respostaAdiada = new boolean[nosNoCanal];
-        
+
         try {
             //Iniciando o servidor RMI
             ServerJavaRMI.iniciarServidor(String.valueOf(numSeq), numeroDaPorta);
-            ClienteJavaRMI.executarInterfaceRemota(carimboDeTempo, numSeq, numeroDaPorta);
+            //ClienteJavaRMI.executarInterfaceRemota(carimboDeTempo, numSeq, numeroDaPorta);
         } catch (AlreadyBoundException ex) {
             System.out.println(ex);
             Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public String[] receberNomePeersNaRede() throws RemoteException, MalformedURLException {
+
+        //Cada porta só tem um peer então pegamos sempre o primeiro
+        String peerPorta1099 = nomePeersNaPorta(1099)[0];
+        String peerPorta1100 = nomePeersNaPorta(1100)[0];
+        String peerPorta1101 = nomePeersNaPorta(1101)[0];
+
+        return new String[]{peerPorta1099, peerPorta1100, peerPorta1101};
+    }
+
+    public static String[] nomePeersNaPorta(int porta) throws RemoteException {
+
+        //Checando 
+        Registry registryPorta = LocateRegistry.getRegistry(porta);
+        //Obtendo nome dos peers na rede na porta específica
+        String[] listaServerLigados = registryPorta.list();
+
+        if (listaServerLigados.length == 1) {
+            return listaServerLigados;
+        } else {
+            Exception e = new Exception("Mais de um peer conectado na porta");
+            return new String[]{""};
         }
     }
 
@@ -64,19 +91,8 @@ public class AlgoritmoRicartAgrawala {
             }
         }
 
-        while (respostasPendentes > 0) {
-            try {
-                Thread.sleep(5);
-
-            } catch (Exception e) {
-
-            }
-            /* espere até termos respostas de todos os outros processos */
-        }
-
         //Retornamos quando estivermos prontos para entrar no CS
         return true;
-
     }
 
     //A outra metade da invocação
