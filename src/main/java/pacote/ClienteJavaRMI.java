@@ -13,20 +13,20 @@ public class ClienteJavaRMI {
 
     public static void main(String[] args) {
         
-        
-        abrirUmProcessoCliente(1,1, 1099);
-//        abrirUmProcessoCliente(2,2, 1100);
-//        abrirUmProcessoCliente(3,3, 1101);
+        int carimboDeTempo = 1;
+        int numSeq = 1;
+        int numeroDaPorta = 1099;
+        AlgoritmoRicartAgrawala peer1 = new AlgoritmoRicartAgrawala(carimboDeTempo, numSeq, numeroDaPorta);
     }
 
-    public static void abrirUmProcessoCliente(int carimboDeTempo, int numSeq, int numeroDaPorta) {
+    //Executa a interface remota
+    public static void executarInterfaceRemota(int carimboDeTempo, int numSeq, int numeroDaPorta) {
         try {
             verQuemSaoOsProcessosAtivos();
 
             InterfaceJavaRMI ola = (InterfaceJavaRMI) Naming.lookup("Peer"+Integer.toString(numSeq));
-            AlgoritmoRicartAgrawala processo = new AlgoritmoRicartAgrawala(carimboDeTempo, numSeq, numeroDaPorta);
-//            processo.invocacao();
-            respostaServidor = "Resposta do servidor: " + ola.alerta(1, "Teste");
+//            respostaServidor = "Resposta do servidor: " + ola.alerta(1, "Teste");
+            
         } catch (MalformedURLException | NotBoundException | RemoteException e) {
             System.out.println(e);
         }

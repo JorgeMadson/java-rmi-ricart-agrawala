@@ -41,8 +41,9 @@ public class AlgoritmoRicartAgrawala {
         try {
             //Iniciando o servidor RMI
             ServerJavaRMI.iniciarServidor(String.valueOf(numSeq), numeroDaPorta);
-            ClienteJavaRMI.abrirUmProcessoCliente(carimboDeTempo, numSeq, numeroDaPorta);
+            ClienteJavaRMI.executarInterfaceRemota(carimboDeTempo, numSeq, numeroDaPorta);
         } catch (AlreadyBoundException ex) {
+            System.out.println(ex);
             Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

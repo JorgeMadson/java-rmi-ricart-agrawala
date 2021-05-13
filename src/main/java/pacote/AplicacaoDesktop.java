@@ -37,7 +37,7 @@ public class AplicacaoDesktop {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClienteJavaRMI.abrirUmProcessoCliente(1, 1, 1099);
+                ClienteJavaRMI.executarInterfaceRemota(1, 1, 1099);
                 labelProcessosExecutando.setText(ClienteJavaRMI.respostaServidor);
             }
         });

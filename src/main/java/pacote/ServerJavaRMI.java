@@ -44,17 +44,19 @@ public class ServerJavaRMI {
 
             //Caso queria mudar a porta em que vamos conectar, a padrão é 1099
             Registry registry = LocateRegistry.createRegistry(numeroDaPorta);
+            registry.rebind(ServerJavaRMI.NOME_SERVIDOR  + identificador, implementacao);
+
 
             String[] listaServerLigados = registry.list();
 
             System.out.println(listarServidores(listaServerLigados));
 
-            if (listaServerLigados.length == 0) {
-                registry.bind(ServerJavaRMI.NOME_SERVIDOR  + identificador, implementacao);
-            } else {
-                //Recebe o servidor ativo da lista
-                registry = LocateRegistry.getRegistry(ServerJavaRMI.NOME_SERVIDOR + identificador);
-            }
+//            if (listaServerLigados.length == 0) {
+//                registry.bind(ServerJavaRMI.NOME_SERVIDOR  + identificador, implementacao);
+//            } else {
+//                //Recebe o servidor ativo da lista
+//                registry = LocateRegistry.getRegistry(ServerJavaRMI.NOME_SERVIDOR + identificador);
+//            }
 
             servidorEstaAtivo = "Servindo classe ClasseDeImplementacoes";
             System.out.println(servidorEstaAtivo);

@@ -13,7 +13,9 @@ public class ClasseDeImplementacoes extends UnicastRemoteObject implements Inter
 
     @Override
     public String alerta(int idNo, String texto) throws RemoteException {
-        return "Nó:" + idNo + " Mensagem:" + texto;
+        String retorno = "Nó:" + idNo + " Mensagem:" + texto;
+        System.out.println(retorno);
+        return retorno;
     }
 
 }
