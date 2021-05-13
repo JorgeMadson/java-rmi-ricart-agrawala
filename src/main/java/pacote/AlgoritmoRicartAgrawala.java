@@ -9,6 +9,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Arrays;
 
 public class AlgoritmoRicartAgrawala {
 
@@ -39,6 +40,8 @@ public class AlgoritmoRicartAgrawala {
         this.meuId = meuId;
 
         respostaAdiada = new boolean[nosNoCanal];
+        //Implementar de uma forma melhor ao pedido de liberar a SC
+        Arrays.fill(respostaAdiada, true);
 
         try {
             //Iniciando o servidor RMI
@@ -97,7 +100,7 @@ public class AlgoritmoRicartAgrawala {
     public void liberarSC() throws NotBoundException, MalformedURLException, RemoteException {
         solicitandoCS = false;
 
-        for (int i = 0; i < nosNoCanal; i++) {
+        for (int i = 0; i < nosNoCanal - 1; i++) {
             if (respostaAdiada[i]) {
                 respostaAdiada[i] = false;
                 if (i < (meuId - 1)) {
@@ -144,13 +147,13 @@ public class AlgoritmoRicartAgrawala {
         //System.out.println("Outstanding replies: " + respostasPendentes);
     }
 
-    public void responderAo(int numNoRecebido) throws NotBoundException, MalformedURLException, RemoteException {
-        System.out.println("enviado RESPOSTA ao no " + numNoRecebido);
-        if (numNoRecebido > meuId) {
+    public void responderAo(int idPeerPedinte) throws NotBoundException, MalformedURLException, RemoteException {
+        System.out.println("enviado RESPOSTA ao Peer " + idPeerPedinte);
+        if (idPeerPedinte > meuId) {
             //Comunicação pelo Java RMi
             InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup(NOME_PEER);
             try {
-                interfaceRemota.alerta(numNoRecebido - 2, ("RESPOSTA," + numNoRecebido));
+                interfaceRemota.alerta(idPeerPedinte - 2, ("RESPOSTA," + idPeerPedinte));
             } catch (RemoteException ex) {
                 Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -158,7 +161,7 @@ public class AlgoritmoRicartAgrawala {
             //Comunicação pelo Java RMi
             InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup(NOME_PEER);
             try {
-                interfaceRemota.alerta(numNoRecebido - 1, ("RESPOSTA," + numNoRecebido));
+                interfaceRemota.alerta(idPeerPedinte - 1, ("RESPOSTA," + idPeerPedinte));
             } catch (RemoteException ex) {
                 Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
             }
