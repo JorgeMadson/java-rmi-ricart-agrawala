@@ -117,7 +117,7 @@ public class AlgoritmoRicartAgrawala {
      *
      */
     public void receberPedido(int seqNumRecebido, int numNoRecebido) throws NotBoundException, MalformedURLException, RemoteException {
-        System.out.println("Pedido recebido do nó" + numNoRecebido);
+        System.out.println("Pedido recebido do peer" + numNoRecebido);
         boolean bDefer = false;
 
         maiorNumSeq = Math.max(maiorNumSeq, seqNumRecebido);
