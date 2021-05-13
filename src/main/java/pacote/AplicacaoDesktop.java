@@ -26,7 +26,7 @@ public class AplicacaoDesktop {
         labelStatusServidor.setText(ServerJavaRMI.servidorEstaAtivo);
         
         //Levantar peers
-        AlgoritmoRicartAgrawala peer1 = new AlgoritmoRicartAgrawala(1, 1);
+        AlgoritmoRicartAgrawala peer1 = new AlgoritmoRicartAgrawala(1, 1, 1099);
         
         //Label mostrando os processos
         JLabel labelProcessosExecutando = new JLabel(ServerJavaRMI.resposta);
@@ -37,7 +37,7 @@ public class AplicacaoDesktop {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClienteJavaRMI.abrirUmProcessoCliente(1, 1);
+                ClienteJavaRMI.abrirUmProcessoCliente(1, 1, 1099);
                 labelProcessosExecutando.setText(ClienteJavaRMI.respostaServidor);
             }
         });

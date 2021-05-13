@@ -23,7 +23,7 @@ public class AlgoritmoRicartAgrawala {
 
     public boolean[] respostaAdiada;
 
-    public AlgoritmoRicartAgrawala(int carimboDeTempo, int numSeq) {
+    public AlgoritmoRicartAgrawala(int carimboDeTempo, int numSeq, int numeroDaPorta) {
         solicitandoCS = false;
 
         respostasPendentes = nosNoCanal;
@@ -31,8 +31,6 @@ public class AlgoritmoRicartAgrawala {
         maiorNumSeq = 0;
         this.numSeq = numSeq;
 
-        //Comunicação pelo Java RMi
-        // 
         //Comunicação pelo Java RMi
         // Numeros do nó também é usado para prioridade (baixo nó = maior prioridade no esquema RicartAgrawala)
         // Numeros do nó são [1, nosNoCanal]; já que estamos começando em 1, então tem que ficar atento com erros ao tentar acessar o nó '0'.
@@ -42,16 +40,17 @@ public class AlgoritmoRicartAgrawala {
         
         try {
             //Iniciando o servidor RMI
-            ServerJavaRMI.iniciarServidor(String.valueOf(numSeq));
+            ServerJavaRMI.iniciarServidor(String.valueOf(numSeq), numeroDaPorta);
+            ClienteJavaRMI.abrirUmProcessoCliente(carimboDeTempo, numSeq, numeroDaPorta);
         } catch (AlreadyBoundException ex) {
             Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     /**
-     * invocacao (begun in driver module with request CS)
+     * invocacao (inicio do modulo com requisição da CS)
      */
-    public boolean invocacao() throws NotBoundException, MalformedURLException, RemoteException {
+    public boolean possoEntrarNaCS() throws NotBoundException, MalformedURLException, RemoteException {
 
         solicitandoCS = true;
         numSeq = maiorNumSeq + 1;

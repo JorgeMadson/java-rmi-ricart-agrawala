@@ -15,13 +15,17 @@ public class ServerJavaRMI {
     static String servidorEstaAtivo = "Não ativo...";
 
     public static void main(String[] args) throws AlreadyBoundException, MalformedURLException {
-        iniciarServidor("Teste");
+        iniciarServidor("Teste", 1099);
+        iniciarServidor("Teste", 1100);
+        iniciarServidor("Teste", 1101);
     }
 
     public static String listarServidores(String[] listaServerLigados) {
 
+        //Vê se existe algum servidor ativo
         resposta = "Numero de servidores ativos: " + listaServerLigados.length + "\n";
 
+        //Adiciona os servidores ativos a lista
         for (String nomeServer : listaServerLigados) {
 
             resposta = resposta + "Servidores:" + nomeServer + "\n";
@@ -29,7 +33,7 @@ public class ServerJavaRMI {
         return resposta;
     }
 
-    public static void iniciarServidor(String identificador) throws AlreadyBoundException {
+    public static void iniciarServidor(String identificador, int numeroDaPorta) throws AlreadyBoundException {
         try {
 
             InterfaceJavaRMI implementacao = new ClasseDeImplementacoes();
@@ -39,7 +43,7 @@ public class ServerJavaRMI {
             //Naming.bind(NOME_SERVIDOR, ola);
 
             //Caso queria mudar a porta em que vamos conectar, a padrão é 1099
-            Registry registry = LocateRegistry.createRegistry(1099);
+            Registry registry = LocateRegistry.createRegistry(numeroDaPorta);
 
             String[] listaServerLigados = registry.list();
 
