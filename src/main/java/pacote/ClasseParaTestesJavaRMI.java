@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 //Essa classe server apenas para testar o servidor Java RMI
 //Ou seja, para checar se o servidor Java RMi está funcionando como deveria
-public class ClienteJavaRMI {
+public class ClasseParaTestesJavaRMI {
 
     public static String respostaServidor;
 
@@ -30,7 +30,7 @@ public class ClienteJavaRMI {
 
         } catch (RemoteException ex) {
             System.out.println(ex);
-            Logger.getLogger(ClienteJavaRMI.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClasseParaTestesJavaRMI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
