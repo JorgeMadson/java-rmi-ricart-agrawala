@@ -23,19 +23,6 @@ public class ClasseParaTestesJavaRMI {
         AlgoritmoRicartAgrawala peer3 = new AlgoritmoRicartAgrawala(3, 3, 1101);
 
         String[] todosOsPeersConectados;
-        try {
-            todosOsPeersConectados = peer1.receberNomePeersNaRede();            
-            System.out.println(concatenarListaDeString(todosOsPeersConectados));
-            boolean entrandoNaSC = peer1.perguntarSePossoEntrarNaSC();
-            entrandoNaSC = peer2.perguntarSePossoEntrarNaSC();
-            entrandoNaSC = peer3.perguntarSePossoEntrarNaSC();
-
-        } catch (RemoteException ex) {
-            System.out.println(ex);
-            Logger.getLogger(ClasseParaTestesJavaRMI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
-            Logger.getLogger(ClasseParaTestesJavaRMI.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     public static String concatenarListaDeString(String[] lista) {

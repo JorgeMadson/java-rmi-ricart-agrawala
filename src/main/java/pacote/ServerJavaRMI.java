@@ -3,9 +3,12 @@ package pacote;
 import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import sun.util.locale.provider.LocaleResources;
 
 // O serve a nossa classe, preferi fazer os atributos e funções de forma estática
 public class ServerJavaRMI {
@@ -14,10 +17,20 @@ public class ServerJavaRMI {
     static String resposta;
     static String servidorEstaAtivo = "Não ativo...";
 
-    public static void main(String[] args) throws AlreadyBoundException, MalformedURLException {
-        iniciarServidor("Teste", 1099);
-        iniciarServidor("Teste", 1100);
-        iniciarServidor("Teste", 1101);
+    public static void main(String[] args) throws AlreadyBoundException, MalformedURLException, RemoteException, NotBoundException {
+
+        //Criou o registro, agora dá pra 
+        LocateRegistry.createRegistry(1099);
+        
+        iniciarServidor("Peer1");
+        iniciarServidor("Peer2");
+        iniciarServidor("Peer3");
+        iniciarServidor("1");
+        Remote registros = Naming.lookup("Peer1");
+        Remote todosOsRegistros = Naming.lookup("");
+        
+        String soPraSegurarOBreak = "chegou";
+        soPraSegurarOBreak+=" no fim";
     }
 
     public static String listarServidores(String[] listaServerLigados) {
@@ -33,30 +46,12 @@ public class ServerJavaRMI {
         return resposta;
     }
 
-    public static void iniciarServidor(String identificador, int numeroDaPorta) throws AlreadyBoundException {
+    public static void iniciarServidor(String identificador) throws AlreadyBoundException, MalformedURLException {
         try {
-
-            InterfaceJavaRMI implementacao = new ClasseDeImplementacoes();
 
             //Dá pra usar o Naming e Registry
             //Caso registry não funcione, use o naming:
-            //Naming.bind(NOME_SERVIDOR, ola);
-
-            //Caso queria mudar a porta em que vamos conectar, a padrão é 1099
-            Registry registry = LocateRegistry.createRegistry(numeroDaPorta);
-            registry.rebind(ServerJavaRMI.NOME_SERVIDOR  + identificador, implementacao);
-
-
-            String[] listaServerLigados = registry.list();
-
-            System.out.println(listarServidores(listaServerLigados));
-
-//            if (listaServerLigados.length == 0) {
-//                registry.bind(ServerJavaRMI.NOME_SERVIDOR  + identificador, implementacao);
-//            } else {
-//                //Recebe o servidor ativo da lista
-//                registry = LocateRegistry.getRegistry(ServerJavaRMI.NOME_SERVIDOR + identificador);
-//            }
+            Naming.bind(NOME_SERVIDOR + identificador, new ClasseDeImplementacoes());
 
             servidorEstaAtivo = "Servindo classe ClasseDeImplementacoes";
             System.out.println(servidorEstaAtivo);

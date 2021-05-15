@@ -19,6 +19,11 @@ public class AlgoritmoRicartAgrawala {
     public int maiorNumSeq;
     public int idDoPeer;
     public int meuId;
+    
+    //Esses são os recursos
+    public boolean recurso1EstaSendoUtilizado = false;
+    public boolean recurso2EstaSendoUtilizado = false;
+    
     //Comunicação pelo Java RMi
 
     //Serão 3 peers por enquanto
@@ -26,7 +31,7 @@ public class AlgoritmoRicartAgrawala {
 
     public boolean[] respostaAdiada;
 
-    public AlgoritmoRicartAgrawala(int meuId, int numSeq, int numeroDaPorta) {
+    public AlgoritmoRicartAgrawala(int meuId, int numSeq, int numeroDaPorta) throws MalformedURLException {
         solicitandoCS = false;
 
         respostasPendentes = nosNoCanal;
@@ -45,7 +50,7 @@ public class AlgoritmoRicartAgrawala {
 
         try {
             //Iniciando o servidor RMI
-            ServerJavaRMI.iniciarServidor(String.valueOf(numSeq), numeroDaPorta);
+            ServerJavaRMI.iniciarServidor(String.valueOf(numSeq));
             //ClasseParaTestesJavaRMI.executarInterfaceRemota(meuId, idDoPeer, numeroDaPorta);
         } catch (AlreadyBoundException ex) {
             System.out.println(ex);
