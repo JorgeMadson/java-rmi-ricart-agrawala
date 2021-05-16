@@ -16,53 +16,44 @@ public class AplicacaoDesktop {
     private static AlgoritmoRicartAgrawala peer2;
     private static AlgoritmoRicartAgrawala peer3;
 
+    //Textos
+    static JLabel titulo;
+    static JLabel pedirAcessoSessaoCritica;
+    static JLabel liberarSessaoCritica;
+
+    //Botoes
+    static JButton levantarPeer1;
+    static JButton levantarPeer2;
+    static JButton levantarPeer3;
+    static JButton peer1PedirSCRecurso1;
+    static JButton peer2PedirSCRecurso1;
+    static JButton peer3PedirSCReCurso1;
+
+    static JButton peer1PedirSCRecurso2;
+    static JButton peer2PedirSCRecurso2;
+    static JButton peer3PedirSCReCurso2;
+
+    static JButton peer1LiberarSCRecurso1;
+    static JButton peer2LiberarSCRecurso1;
+    static JButton peer3LiberarSCRecurso1;
+
+    static JButton peer1LiberarSCRecurso2;
+    static JButton peer2LiberarSCRecurso2;
+    static JButton peer3LiberarSCRecurso2;
+
     public static void main(String[] args) throws AlreadyBoundException {
 
-        JFrame f = new JFrame();
 
-        //Encerra a aplicação quando fechado
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        //Label-------------------------------------------//
-        //Labels nome do algoritmo
-        JLabel titulo = new JLabel("Algoritmo Ricart Agrawala");
-        titulo.setBounds(50, 30, 250, 15);//eixo x, eixo y, largura, altura
-        f.add(titulo);
-        
-        JLabel pedirAcessoSessaoCritica = new JLabel("Pedir Acesso Sessão Crítica");
-        pedirAcessoSessaoCritica.setBounds(275, 30, 250, 15);//eixo x, eixo y, largura, altura
-        f.add(pedirAcessoSessaoCritica);
-        
-        JLabel liberarSessaoCritica = new JLabel("Liberar Sessão Crítica");
-        liberarSessaoCritica.setBounds(500, 30, 250, 15);//eixo x, eixo y, largura, altura
-        f.add(liberarSessaoCritica);
-
-        //Botões-------------------------------------------//
-        //Botões levantar peers
-        JButton levantarPeer1 = new JButton("Levantar Peer1");
-        levantarPeer1.setBounds(50, 50, 200, 20);//eixo x, eixo y, largura, altura
-
-        JButton levantarPeer2 = new JButton("Levantar Peer2");
-        levantarPeer2.setBounds(50, 75, 200, 20);//eixo x, eixo y, largura, altura
-
-        JButton levantarPeer3 = new JButton("Levantar Peer3");
-        levantarPeer3.setBounds(50, 100, 200, 20);//eixo x, eixo y, largura, altura
-
-        //Botões pedir acesso a Sessão Crítica
-        JButton peer1PedirSC = new JButton("►");
-        peer1PedirSC.setBounds(275, 50, 50, 20);//eixo x, eixo y, largura, altura
-        JButton peer2PedirSC = new JButton("►");
-        peer2PedirSC.setBounds(275, 75, 50, 20);//eixo x, eixo y, largura, altura
-        JButton peer3PedirSC = new JButton("►");
-        peer3PedirSC.setBounds(275, 100, 50, 20);//eixo x, eixo y, largura, altura
-        
-        //Botões pedir acesso a Sessão Crítica
-        JButton peer1LiberarSC = new JButton("◄");
-        peer1LiberarSC.setBounds(500, 50, 50, 20);//eixo x, eixo y, largura, altura
-        JButton peer2LiberarSC = new JButton("◄");
-        peer2LiberarSC.setBounds(500, 75, 50, 20);//eixo x, eixo y, largura, altura
-        JButton peer3LiberarSC = new JButton("◄");
-        peer3LiberarSC.setBounds(500, 100, 50, 20);//eixo x, eixo y, largura, altura
+        //Parte visual-------------------------------------------//
+        executarParteVisual();
+        //Lógica
+        // 1- Ligar o JavaRMI
+        // 2- Ligar os peers
+        // 3- Cada peer poder pedir pra entrar na SC
+        // 3.1- Se um peer tiver pedido pra entrar ver quem pediu primeiro
+        // 3.2- Se ninguém pediu os outros respondem ok
+        // 3.3- Todo mundo respondendo entrar na SC
+        // 4- Um peer que esteja na SC pede pra liberar
 
 
         //Ações dos botões-------------------------------------------//
@@ -70,23 +61,38 @@ public class AplicacaoDesktop {
         levantarPeer1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AplicacaoDesktop.peer1 = new AlgoritmoRicartAgrawala(1, 1, 1099);
+                try {
+                    AplicacaoDesktop.peer1 = new AlgoritmoRicartAgrawala(1, 1);
+                } catch (MalformedURLException e1) {
+                    System.out.println("AplicacaoDesktop -> MalformedURLException");
+                    e1.printStackTrace();
+                }
             }
         });
         levantarPeer2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AplicacaoDesktop.peer2 = new AlgoritmoRicartAgrawala(2, 2, 1100);
+                try {
+                    AplicacaoDesktop.peer2 = new AlgoritmoRicartAgrawala(2, 2);
+                } catch (MalformedURLException e1) {
+                    System.out.println("AplicacaoDesktop -> MalformedURLException");
+                    e1.printStackTrace();
+                }
             }
         });
         levantarPeer3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AplicacaoDesktop.peer3 = new AlgoritmoRicartAgrawala(3, 3, 1101);
+                try {
+                    AplicacaoDesktop.peer3 = new AlgoritmoRicartAgrawala(3, 3);
+                } catch (MalformedURLException e1) {
+                    System.out.println("AplicacaoDesktop -> MalformedURLException");
+                    e1.printStackTrace();
+                }
             }
         });
         //PedirSC
-        peer1PedirSC.addActionListener(new ActionListener() {
+        peer1PedirSCRecurso1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -97,7 +103,7 @@ public class AplicacaoDesktop {
                 }
             }
         });
-        peer2PedirSC.addActionListener(new ActionListener() {
+        peer2PedirSCRecurso1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -108,7 +114,7 @@ public class AplicacaoDesktop {
                 }
             }
         });
-        peer3PedirSC.addActionListener(new ActionListener() {
+        peer3PedirSCReCurso1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -119,7 +125,7 @@ public class AplicacaoDesktop {
             }
         });
         //LiberarSC
-        peer1LiberarSC.addActionListener(new ActionListener() {
+        peer1LiberarSCRecurso1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -129,7 +135,7 @@ public class AplicacaoDesktop {
                 }
             }
         });
-        peer2LiberarSC.addActionListener(new ActionListener() {
+        peer2LiberarSCRecurso1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -139,7 +145,7 @@ public class AplicacaoDesktop {
                 }
             }
         });
-        peer3LiberarSC.addActionListener(new ActionListener() {
+        peer3LiberarSCRecurso1.addActionListener(new ActionListener() {
             @Override
            public void actionPerformed(ActionEvent e) {
                 try {
@@ -150,22 +156,104 @@ public class AplicacaoDesktop {
             }
         });
 
+    }
+
+    public static void executarParteVisual() {
+        JFrame f = new JFrame();
+
+        //Encerra a aplicação quando fechado
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        //Label-------------------------------------------//
+        //Labels nome do algoritmo
+        titulo = new JLabel("Algoritmo Ricart Agrawala");
+        titulo.setBounds(50, 30, 250, 15);//eixo x, eixo y, largura, altura
+        f.add(titulo);
+        
+        pedirAcessoSessaoCritica = new JLabel("Pedir Acesso Sessão Crítica");
+        pedirAcessoSessaoCritica.setBounds(275, 30, 250, 15);//eixo x, eixo y, largura, altura
+        f.add(pedirAcessoSessaoCritica);
+        
+        liberarSessaoCritica = new JLabel("Liberar Sessão Crítica");
+        liberarSessaoCritica.setBounds(500, 30, 250, 15);//eixo x, eixo y, largura, altura
+        f.add(liberarSessaoCritica);
+
+        //Botões-------------------------------------------//
+        //Botões levantar peers
+        levantarPeer1 = new JButton("Levantar Peer1");
+        levantarPeer1.setBounds(50, 50, 200, 20);//eixo x, eixo y, largura, altura
+
+        levantarPeer2 = new JButton("Levantar Peer2");
+        levantarPeer2.setBounds(50, 75, 200, 20);//eixo x, eixo y, largura, altura
+
+        levantarPeer3 = new JButton("Levantar Peer3");
+        levantarPeer3.setBounds(50, 100, 200, 20);//eixo x, eixo y, largura, altura
+
+        //Botões pedir acesso a Sessão Crítica Recurso 1
+        peer1PedirSCRecurso1 = new JButton("► 1");
+        peer1PedirSCRecurso1.setBounds(275, 50, 60, 20);//eixo x, eixo y, largura, altura
+        peer2PedirSCRecurso1 = new JButton("► 1");
+        peer2PedirSCRecurso1.setBounds(275, 75, 60, 20);//eixo x, eixo y, largura, altura
+        peer3PedirSCReCurso1 = new JButton("► 1");
+        peer3PedirSCReCurso1.setBounds(275, 100, 60, 20);//eixo x, eixo y, largura, altura
+
+        //Botões pedir acesso a Sessão Crítica Recurso 2
+        peer1PedirSCRecurso2 = new JButton("► 2");
+        peer1PedirSCRecurso2.setBounds(350, 50, 60, 20);//eixo x, eixo y, largura, altura
+        peer2PedirSCRecurso2 = new JButton("► 2");
+        peer1PedirSCRecurso2.setBounds(350, 50, 60, 20);//eixo x, eixo y, largura, altura
+        peer2PedirSCRecurso2 = new JButton("► 2");
+        peer2PedirSCRecurso2.setBounds(350, 75, 60, 20);//eixo x, eixo y, largura, altura
+        peer3PedirSCReCurso2 = new JButton("► 2");
+        peer3PedirSCReCurso2.setBounds(350, 100, 60, 20);//eixo x, eixo y, largura, altura
+        
+        //Botões pedir acesso a Sessão Crítica Recurso 1
+        peer1LiberarSCRecurso1 = new JButton("◄ 1");
+        peer1LiberarSCRecurso1.setBounds(500, 50, 60, 20);//eixo x, eixo y, largura, altura
+        peer2LiberarSCRecurso1 = new JButton("◄ 1");
+        peer2LiberarSCRecurso1.setBounds(500, 75, 60, 20);//eixo x, eixo y, largura, altura
+        peer3LiberarSCRecurso1 = new JButton("◄ 1");
+        peer3LiberarSCRecurso1.setBounds(500, 100, 60, 20);//eixo x, eixo y, largura, altura
+
+        //Botões pedir acesso a Sessão Crítica Recurso 2
+        peer1LiberarSCRecurso2 = new JButton("◄ 2");
+        peer1LiberarSCRecurso2.setBounds(560, 50, 60, 20);//eixo x, eixo y, largura, altura
+        peer2LiberarSCRecurso2 = new JButton("◄ 2");
+        peer2LiberarSCRecurso2.setBounds(560, 75, 60, 20);//eixo x, eixo y, largura, altura
+        peer3LiberarSCRecurso2 = new JButton("◄ 2");
+        peer3LiberarSCRecurso2.setBounds(560, 100, 60, 20);//eixo x, eixo y, largura, altura
+        
         //adcionando botões no JFrame-------------------------------------------//
         f.add(levantarPeer1);
         f.add(levantarPeer2);
         f.add(levantarPeer3);
         
-        f.add(peer1PedirSC);
-        f.add(peer2PedirSC);
-        f.add(peer3PedirSC);
+        f.add(peer1PedirSCRecurso1);
+        f.add(peer2PedirSCRecurso1);
+        f.add(peer3PedirSCReCurso1);
+        f.add(peer1PedirSCRecurso1);
+        f.add(peer2PedirSCRecurso1);
+        f.add(peer3PedirSCReCurso1);
         
-        f.add(peer1LiberarSC);
-        f.add(peer2LiberarSC);
-        f.add(peer3LiberarSC);
+        f.add(peer1PedirSCRecurso2);
+        f.add(peer2PedirSCRecurso2);
+        f.add(peer3PedirSCReCurso2);
+        f.add(peer1PedirSCRecurso2);
+        f.add(peer2PedirSCRecurso2);
+        f.add(peer3PedirSCReCurso2);
+
+        f.add(peer1LiberarSCRecurso1);
+        f.add(peer2LiberarSCRecurso1);
+        f.add(peer3LiberarSCRecurso1);
+        f.add(peer1LiberarSCRecurso2);
+        f.add(peer2LiberarSCRecurso2);
+        f.add(peer3LiberarSCRecurso2);
 
         //Janela-------------------------------------------//
         f.setSize(800, 400);// largura, altura
         f.setLayout(null);//usando o gerenciador de layout 
         f.setVisible(true);//fazendo o frame visivel
+
     }
+
 }

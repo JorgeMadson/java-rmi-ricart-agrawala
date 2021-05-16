@@ -17,10 +17,9 @@ public class ClasseParaTestesJavaRMI {
         
         int meuId = 1;
         int numSeq = 1;
-        int numeroDaPorta = 1099;
-        AlgoritmoRicartAgrawala peer1 = new AlgoritmoRicartAgrawala(meuId, numSeq, numeroDaPorta);
-        AlgoritmoRicartAgrawala peer2 = new AlgoritmoRicartAgrawala(2, 2, 1100);
-        AlgoritmoRicartAgrawala peer3 = new AlgoritmoRicartAgrawala(3, 3, 1101);
+        AlgoritmoRicartAgrawala peer1 = new AlgoritmoRicartAgrawala(meuId, numSeq);
+        AlgoritmoRicartAgrawala peer2 = new AlgoritmoRicartAgrawala(2, 2);
+        AlgoritmoRicartAgrawala peer3 = new AlgoritmoRicartAgrawala(3, 3);
 
         String[] todosOsPeersConectados;
     }

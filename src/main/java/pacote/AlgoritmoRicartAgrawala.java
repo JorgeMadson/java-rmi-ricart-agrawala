@@ -31,12 +31,13 @@ public class AlgoritmoRicartAgrawala {
 
     public boolean[] respostaAdiada;
 
-    public AlgoritmoRicartAgrawala(int meuId, int numSeq, int numeroDaPorta) throws MalformedURLException {
+    public AlgoritmoRicartAgrawala(int meuId, int numSeq) throws MalformedURLException {
+
+        maiorNumSeq = 0;
         solicitandoCS = false;
 
         respostasPendentes = nosNoCanal;
 
-        maiorNumSeq = 0;
         this.idDoPeer = numSeq;
 
         //Comunicação pelo Java RMi
@@ -54,7 +55,7 @@ public class AlgoritmoRicartAgrawala {
             //ClasseParaTestesJavaRMI.executarInterfaceRemota(meuId, idDoPeer, numeroDaPorta);
         } catch (AlreadyBoundException ex) {
             System.out.println(ex);
-            Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Exceçao no AlgoritmoRicartAgrawala AlreadyBoundException");
         }
     }
 
