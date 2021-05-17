@@ -1,13 +1,8 @@
 package pacote;
 
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -106,7 +101,7 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
      */
     public void receberPedido(int seqNumRecebido, int numNoRecebido) throws NotBoundException, MalformedURLException, RemoteException {
         System.out.println("Pedido recebido do peer" + numNoRecebido);
-        boolean bDefer = false;
+        // boolean bDefer = false;
 
         maiorNumSeq = Math.max(maiorNumSeq, seqNumRecebido);
         // bDefer = solicitandoCS && ((seqNumRecebido > idDoPeer) || (seqNumRecebido == idDoPeer && numNoRecebido > meuId));
@@ -155,7 +150,7 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
 
     public boolean pedirAo(String nomeDoPedinte, LocalDateTime horaDoPedido) throws NotBoundException, MalformedURLException, RemoteException {
         System.out.println("enviando PEDIDO ao " + nomeDoPedinte);
-        LocalDateTime agora = LocalDateTime.now();
+        // LocalDateTime agora = LocalDateTime.now();
 
         // if (i > idDoPedinte) {
         //     //Comunicação pelo Java RMi
