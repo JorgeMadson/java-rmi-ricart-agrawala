@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.net.MalformedURLException;
-import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.registry.LocateRegistry;
@@ -48,15 +47,6 @@ public class AlgoritmoRicartAgrawala {
         respostaAdiada = new boolean[nosNoCanal];
         //Implementar de uma forma melhor ao pedido de liberar a SC
         Arrays.fill(respostaAdiada, true);
-
-        try {
-            //Iniciando o servidor RMI
-            ServerJavaRMI.iniciarServidor(String.valueOf(numSeq));
-            //ClasseParaTestesJavaRMI.executarInterfaceRemota(meuId, idDoPeer, numeroDaPorta);
-        } catch (AlreadyBoundException ex) {
-            System.out.println(ex);
-            System.out.println("Exceçao no AlgoritmoRicartAgrawala AlreadyBoundException");
-        }
     }
 
     public String[] receberNomePeersNaRede() throws RemoteException, MalformedURLException {
