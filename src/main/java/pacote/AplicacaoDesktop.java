@@ -56,28 +56,28 @@ public class AplicacaoDesktop {
         // 3.3- Todo mundo respondendo entrar na SC
         // 4- Um peer que esteja na SC pede pra liberar
 
+        // Levantando peers
+        try {
+            AplicacaoDesktop.peer1 = new AlgoritmoRicartAgrawala("Peer1");
+            AplicacaoDesktop.peer2 = new AlgoritmoRicartAgrawala("Peer2");
+            AplicacaoDesktop.peer3 = new AlgoritmoRicartAgrawala("Peer3");
+        } catch (Exception e1) {
+
+            System.out.println("AplicacaoDesktop -> Levantando peers");
+            e1.printStackTrace();
+        }
+
         // Disponibilizando porta
         try {
             LocateRegistry.createRegistry(1099);
 
-            Naming.rebind("Peer1", new ClasseDeImplementacoes());
-            Naming.rebind("Peer3", new ClasseDeImplementacoes());
-            Naming.rebind("Peer2", new ClasseDeImplementacoes());
+            Naming.rebind("Peer1", AplicacaoDesktop.peer1);
+            Naming.rebind("Peer3", AplicacaoDesktop.peer2);
+            Naming.rebind("Peer2", AplicacaoDesktop.peer3);
         } catch (MalformedURLException | RemoteException e2) {
             System.out.println("AplicacaoDesktop -> Disponibilizando porta");
 
             e2.printStackTrace();
-        }
-        
-        // Levantando peers
-        try {
-            AplicacaoDesktop.peer1 = new AlgoritmoRicartAgrawala(1, 1);
-            AplicacaoDesktop.peer2 = new AlgoritmoRicartAgrawala(2, 2);
-            AplicacaoDesktop.peer3 = new AlgoritmoRicartAgrawala(3, 3);
-        } catch (MalformedURLException e1) {
-
-            System.out.println("AplicacaoDesktop -> MalformedURLException");
-            e1.printStackTrace();
         }
 
         // Ações dos botões-------------------------------------------//
@@ -87,7 +87,7 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer1.perguntarSePossoEntrarNaSC();
+                    AplicacaoDesktop.peer1.perguntarSePossoEntrarNaSC(1);
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                     Logger.getLogger(AplicacaoDesktop.class.getName()).log(Level.SEVERE, null, ex);
@@ -98,7 +98,7 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer2.perguntarSePossoEntrarNaSC();
+                    AplicacaoDesktop.peer2.perguntarSePossoEntrarNaSC(1);
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                     Logger.getLogger(AplicacaoDesktop.class.getName()).log(Level.SEVERE, null, ex);
@@ -109,7 +109,7 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer3.perguntarSePossoEntrarNaSC();
+                    AplicacaoDesktop.peer3.perguntarSePossoEntrarNaSC(1);
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                 }
@@ -119,7 +119,7 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer1.perguntarSePossoEntrarNaSC();
+                    AplicacaoDesktop.peer1.perguntarSePossoEntrarNaSC(2);
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                     Logger.getLogger(AplicacaoDesktop.class.getName()).log(Level.SEVERE, null, ex);
@@ -130,7 +130,7 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer2.perguntarSePossoEntrarNaSC();
+                    AplicacaoDesktop.peer2.perguntarSePossoEntrarNaSC(2);
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                     Logger.getLogger(AplicacaoDesktop.class.getName()).log(Level.SEVERE, null, ex);
@@ -141,7 +141,7 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer3.perguntarSePossoEntrarNaSC();
+                    AplicacaoDesktop.peer3.perguntarSePossoEntrarNaSC(2);
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                 }

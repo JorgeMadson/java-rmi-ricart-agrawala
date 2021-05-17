@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 //Essa interface funciona como um contrato nela mostramos quais funções estamos disponibilizando
 public interface InterfaceJavaRMI extends Remote {
 
-    String alerta(int idNo, String texto) throws RemoteException;
+    boolean estadoDoRecurso(int idDoRecurso) throws RemoteException;
 }
 
 //O que é o?
