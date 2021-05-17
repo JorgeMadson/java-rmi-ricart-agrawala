@@ -2,6 +2,7 @@ package pacote;
 
 import java.rmi.RemoteException;
 import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
@@ -53,26 +54,28 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
 
         solicitandoCS = true;
         idDoPeer = maiorNumSeq + 1;
-        boolean retorno = false;
+        boolean estaUsando = false;
 
         if(meuId == "Peer1") {
-            
             LocalDateTime horaDeAgora = LocalDateTime.now();
-            retorno = pedirAo("Peer2", horaDeAgora);
-            retorno = pedirAo("Peer2", horaDeAgora);
+            estaUsando = pedirAo("Peer2", recurso, horaDeAgora) || pedirAo("Peer3", recurso, horaDeAgora);
         }
         if(meuId == "Peer2") {
             LocalDateTime horaDeAgora = LocalDateTime.now();
-            retorno = pedirAo("Peer2", horaDeAgora);
-            retorno = pedirAo("Peer2", horaDeAgora);
+            estaUsando = pedirAo("Peer1", recurso, horaDeAgora) || pedirAo("Peer3", recurso, horaDeAgora);
         }
         if(meuId == "Peer3") {
             LocalDateTime horaDeAgora = LocalDateTime.now();
-            retorno = pedirAo("Peer2", horaDeAgora);
+            estaUsando = pedirAo("Peer1", recurso, horaDeAgora) || pedirAo("Peer2", recurso, horaDeAgora);
+        }
+
+        if(estaUsando == false) {
+            this.recurso1EstaSendoUtilizado = true;
         }
 
         //Retornamos quando estivermos prontos para entrar no CS
-        return retorno;
+        System.out.println(estaUsando ? "Está sendo utilizado" : "Poder usar!");
+        return estaUsando;
     }
 
     //A outra metade da invocação
@@ -147,28 +150,11 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
         // }
     }
 
-    public boolean pedirAo(String nomeDoPedinte, LocalDateTime horaDoPedido) throws NotBoundException, MalformedURLException, RemoteException {
-        System.out.println("enviando PEDIDO ao " + nomeDoPedinte);
-        // LocalDateTime agora = LocalDateTime.now();
+    public boolean pedirAo(String nomeDoPedinte, int recurso,LocalDateTime horaDoPedido) throws NotBoundException, MalformedURLException, RemoteException {
+        System.out.println("Pedido para utilizar o recurso " + recurso +  " ao " + nomeDoPedinte);
 
-        // if (i > idDoPedinte) {
-        //     //Comunicação pelo Java RMi
-        //     // InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup(NOME_PEER);
-        //     // try {
-        //     //    interfaceRemota.alerta(i - 2, ("PEDIDO," + numSeq + "," + idDoPedinte));
-        //     // } catch (RemoteException ex) {
-        //     //     Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
-        //     // }
-        // } else {
-        //     //Comunicação pelo Java RMi
-        //     // InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup(NOME_PEER);
-        //     // try {
-        //     //     interfaceRemota.alerta(i - 1, ("PEDIDO," + numSeq + "," + idDoPedinte));
-        //     // } catch (RemoteException ex) {
-        //     //     Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
-        //     // }
-        // }
-        return false;
+        InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup(nomeDoPedinte);
+        return interfaceRemota.estadoDoRecurso(recurso);
     }
 
     @Override

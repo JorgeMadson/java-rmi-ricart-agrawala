@@ -18,6 +18,9 @@ public class AplicacaoDesktop {
     private static AlgoritmoRicartAgrawala peer2;
     private static AlgoritmoRicartAgrawala peer3;
 
+    //JFrame para criar a janela
+    static JFrame f;
+
     // Textos
     static JLabel titulo;
     static JLabel pedirAcessoSessaoCritica;
@@ -76,10 +79,9 @@ public class AplicacaoDesktop {
             Naming.rebind("Peer1", AplicacaoDesktop.peer1);
             Naming.rebind("Peer3", AplicacaoDesktop.peer2);
             Naming.rebind("Peer2", AplicacaoDesktop.peer3);
-        } catch (MalformedURLException | RemoteException e2) {
+        } catch (MalformedURLException | RemoteException ex) {
             System.out.println("AplicacaoDesktop -> Disponibilizando porta");
-
-            e2.printStackTrace();
+            ex.printStackTrace();
         }
 
         // Ações dos botões-------------------------------------------//
@@ -185,7 +187,7 @@ public class AplicacaoDesktop {
     }
 
     public static void executarParteVisual() {
-        JFrame f = new JFrame();
+        f = new JFrame();
 
         // Encerra a aplicação quando fechado
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
