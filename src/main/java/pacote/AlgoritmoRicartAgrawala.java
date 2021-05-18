@@ -28,7 +28,7 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
 
     public boolean[] respostaAdiada;
 
-    public AlgoritmoRicartAgrawala(String nomeDoPeer) throws RemoteException  {
+    public AlgoritmoRicartAgrawala(String nomeDoPeer) throws RemoteException {
 
         maiorNumSeq = 0;
         solicitandoCS = false;
