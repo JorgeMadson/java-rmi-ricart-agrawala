@@ -69,7 +69,6 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
         if(meuId == "Peer3") {
             LocalDateTime horaDeAgora = LocalDateTime.now();
             retorno = pedirAo("Peer2", horaDeAgora);
-            retorno = pedirAo("Peer2", horaDeAgora);
         }
 
         //Retornamos quando estivermos prontos para entrar no CS

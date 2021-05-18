@@ -22,11 +22,13 @@ public class AplicacaoDesktop {
     static JLabel titulo;
     static JLabel pedirAcessoSessaoCritica;
     static JLabel liberarSessaoCritica;
+    static JLabel levantarPeer1;
+    static JLabel levantarPeer2;
+    static JLabel levantarPeer3;
+    static JLabel estadoRecurso1;
+    static JLabel estadoRecurso2;
 
     // Botoes
-    static JButton levantarPeer1;
-    static JButton levantarPeer2;
-    static JButton levantarPeer3;
     static JButton peer1PedirSCRecurso1;
     static JButton peer2PedirSCRecurso1;
     static JButton peer3PedirSCReCurso1;
@@ -201,17 +203,27 @@ public class AplicacaoDesktop {
         liberarSessaoCritica = new JLabel("Liberar Sessão Crítica");
         liberarSessaoCritica.setBounds(500, 30, 250, 15);// eixo x, eixo y, largura, altura
         f.add(liberarSessaoCritica);
+        
+        // Label peers
+        levantarPeer1 = new JLabel("Peer1");
+        levantarPeer1.setBounds(150, 50, 200, 20);// eixo x, eixo y, largura, altura
+        levantarPeer2 = new JLabel("Peer2");
+        levantarPeer2.setBounds(150, 75, 200, 20);// eixo x, eixo y, largura, altura
+        levantarPeer3 = new JLabel("Peer3");
+        levantarPeer3.setBounds(150, 100, 200, 20);// eixo x, eixo y, largura, altura
+        f.add(levantarPeer1);
+        f.add(levantarPeer2);
+        f.add(levantarPeer3);
+        
+        estadoRecurso1 = new JLabel("Recurso 1: Livre");
+        estadoRecurso1.setBounds(25, 50, 200, 30);// eixo x, eixo y, largura, altura
+        f.add(estadoRecurso1);
+        
+        estadoRecurso2 = new JLabel("Recurso 2: Livre");
+        estadoRecurso2.setBounds(25, 75, 200, 30);// eixo x, eixo y, largura, altura
+        f.add(estadoRecurso2);
 
         // Botões-------------------------------------------//
-        // Botões levantar peers
-        levantarPeer1 = new JButton("Levantar Peer1");
-        levantarPeer1.setBounds(50, 50, 200, 20);// eixo x, eixo y, largura, altura
-
-        levantarPeer2 = new JButton("Levantar Peer2");
-        levantarPeer2.setBounds(50, 75, 200, 20);// eixo x, eixo y, largura, altura
-
-        levantarPeer3 = new JButton("Levantar Peer3");
-        levantarPeer3.setBounds(50, 100, 200, 20);// eixo x, eixo y, largura, altura
 
         // Botões pedir acesso a Sessão Crítica Recurso 1
         peer1PedirSCRecurso1 = new JButton("► 1");
@@ -248,9 +260,6 @@ public class AplicacaoDesktop {
         peer3LiberarSCRecurso2.setBounds(560, 100, 60, 20);// eixo x, eixo y, largura, altura
 
         // adcionando botões no JFrame-------------------------------------------//
-        f.add(levantarPeer1);
-        f.add(levantarPeer2);
-        f.add(levantarPeer3);
 
         f.add(peer1PedirSCRecurso1);
         f.add(peer2PedirSCRecurso1);
