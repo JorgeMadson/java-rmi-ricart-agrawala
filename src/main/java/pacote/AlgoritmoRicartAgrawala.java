@@ -52,46 +52,58 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
      */
     public boolean perguntarSePossoEntrarNaSC(int recurso) throws NotBoundException, MalformedURLException, RemoteException {
 
-        solicitandoCS = true;
-        idDoPeer = maiorNumSeq + 1;
-        boolean estaUsando = false;
+        this.solicitandoCS = true;
+        // idDoPeer = maiorNumSeq + 1;
+        boolean recursoEstaSendoUsado = false;
+
+        System.out.println("\nO " + this.meuId + " está pedindo o recurso " + recurso);
 
         if(meuId == "Peer1") {
             LocalDateTime horaDeAgora = LocalDateTime.now();
-            estaUsando = pedirAo("Peer2", recurso, horaDeAgora) || pedirAo("Peer3", recurso, horaDeAgora);
+            recursoEstaSendoUsado = pedirAo("Peer2", recurso, horaDeAgora) || pedirAo("Peer3", recurso, horaDeAgora);
         }
         if(meuId == "Peer2") {
             LocalDateTime horaDeAgora = LocalDateTime.now();
-            estaUsando = pedirAo("Peer1", recurso, horaDeAgora) || pedirAo("Peer3", recurso, horaDeAgora);
+            recursoEstaSendoUsado = pedirAo("Peer1", recurso, horaDeAgora) || pedirAo("Peer3", recurso, horaDeAgora);
         }
         if(meuId == "Peer3") {
             LocalDateTime horaDeAgora = LocalDateTime.now();
-            estaUsando = pedirAo("Peer1", recurso, horaDeAgora) || pedirAo("Peer2", recurso, horaDeAgora);
+            recursoEstaSendoUsado = pedirAo("Peer1", recurso, horaDeAgora) || pedirAo("Peer2", recurso, horaDeAgora);
         }
 
-        if(estaUsando == false) {
+        if(recursoEstaSendoUsado == false) {
             this.recurso1EstaSendoUtilizado = true;
         }
 
-        //Retornamos quando estivermos prontos para entrar no CS
-        System.out.println(estaUsando ? "Está sendo utilizado" : "Poder usar!");
-        return estaUsando;
+        //Se a resposta for FALSE nenhum peer está usando
+        //Se for TRUE algum peer está usando
+        //Então esse peer tem que liberar o recurso
+        System.out.println(recursoEstaSendoUsado ? "Está sendo utilizado" : "Está livre!");
+        return recursoEstaSendoUsado;
     }
 
     //A outra metade da invocação
-    public void liberarSC() throws NotBoundException, MalformedURLException, RemoteException {
-        solicitandoCS = false;
-
-        for (int i = 0; i < numeroDePeers - 1; i++) {
-            if (respostaAdiada[i]) {
-                respostaAdiada[i] = false;
-                // if (i < (meuId - 1)) {
-                //     responderAo(i + 1);
-                // } else {
-                //     responderAo(i + 2);
-                // }
-            }
+    public void liberarSC(int qualRecurso) throws NotBoundException, MalformedURLException, RemoteException {
+        if(qualRecurso  == 1) {
+            this.recurso1EstaSendoUtilizado = false;
         }
+
+        if(qualRecurso  == 2) {
+            this.recurso2EstaSendoUtilizado = false;
+        }
+
+        // solicitandoCS = false;
+
+        // for (int i = 0; i < numeroDePeers - 1; i++) {
+        //     if (respostaAdiada[i]) {
+        //         respostaAdiada[i] = false;
+        //         // if (i < (meuId - 1)) {
+        //         //     responderAo(i + 1);
+        //         // } else {
+        //         //     responderAo(i + 2);
+        //         // }
+        //     }
+        // }
     }
 
     /**
@@ -101,54 +113,54 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
      * @param numNoRecebido O número do nó da mensagem recebida
      *
      */
-    public void receberPedido(int seqNumRecebido, int numNoRecebido) throws NotBoundException, MalformedURLException, RemoteException {
-        System.out.println("Pedido recebido do peer" + numNoRecebido);
-        // boolean bDefer = false;
+    // public void receberPedido(int seqNumRecebido, int numNoRecebido) throws NotBoundException, MalformedURLException, RemoteException {
+    //     System.out.println("Pedido recebido do peer" + numNoRecebido);
+    //     // boolean bDefer = false;
 
-        maiorNumSeq = Math.max(maiorNumSeq, seqNumRecebido);
-        // bDefer = solicitandoCS && ((seqNumRecebido > idDoPeer) || (seqNumRecebido == idDoPeer && numNoRecebido > meuId));
-        // if (bDefer) {
-        //     System.out.println("Envio diferido de mensagem para" + numNoRecebido);
-        //     if (numNoRecebido > meuId) {
-        //         respostaAdiada[numNoRecebido - 2] = true;
-        //     } else {
-        //         respostaAdiada[numNoRecebido - 1] = true;
-        //     }
-        // } else {
-        //     System.out.println("Mensagem de resposta enviada para" + numNoRecebido);
-        //     responderAo(numNoRecebido);
-        // }
+    //     maiorNumSeq = Math.max(maiorNumSeq, seqNumRecebido);
+    //     // bDefer = solicitandoCS && ((seqNumRecebido > idDoPeer) || (seqNumRecebido == idDoPeer && numNoRecebido > meuId));
+    //     // if (bDefer) {
+    //     //     System.out.println("Envio diferido de mensagem para" + numNoRecebido);
+    //     //     if (numNoRecebido > meuId) {
+    //     //         respostaAdiada[numNoRecebido - 2] = true;
+    //     //     } else {
+    //     //         respostaAdiada[numNoRecebido - 1] = true;
+    //     //     }
+    //     // } else {
+    //     //     System.out.println("Mensagem de resposta enviada para" + numNoRecebido);
+    //     //     responderAo(numNoRecebido);
+    //     // }
 
-    }
+    // }
 
     /**
      * Recebendo Respostas
      */
-    public void receberResposta() {
-        respostasPendentes = Math.max((respostasPendentes - 1), 0);
-        //System.out.println("Outstanding replies: " + respostasPendentes);
-    }
+    // public void receberResposta() {
+    //     respostasPendentes = Math.max((respostasPendentes - 1), 0);
+    //     //System.out.println("Outstanding replies: " + respostasPendentes);
+    // }
 
-    public void responderAo(int idPeerPedinte) throws NotBoundException, MalformedURLException, RemoteException {
-        System.out.println("enviado RESPOSTA ao Peer " + idPeerPedinte);
-        // if (idPeerPedinte > meuId) {
-            //Comunicação pelo Java RMi
-            // InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup(NOME_PEER);
-            // try {
-            //     interfaceRemota.alerta(idPeerPedinte - 2, ("RESPOSTA," + idPeerPedinte));
-            // } catch (RemoteException ex) {
-            //     Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
-            // }
-        // } else {
-            //Comunicação pelo Java RMi
-            // InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup(NOME_PEER);
-            // try {
-            //     interfaceRemota.alerta(idPeerPedinte - 1, ("RESPOSTA," + idPeerPedinte));
-            // } catch (RemoteException ex) {
-            //     Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
-            // }
-        // }
-    }
+    // public void responderAo(int idPeerPedinte) throws NotBoundException, MalformedURLException, RemoteException {
+    //     System.out.println("enviado RESPOSTA ao Peer " + idPeerPedinte);
+    //     // if (idPeerPedinte > meuId) {
+    //         //Comunicação pelo Java RMi
+    //         // InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup(NOME_PEER);
+    //         // try {
+    //         //     interfaceRemota.alerta(idPeerPedinte - 2, ("RESPOSTA," + idPeerPedinte));
+    //         // } catch (RemoteException ex) {
+    //         //     Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
+    //         // }
+    //     // } else {
+    //         //Comunicação pelo Java RMi
+    //         // InterfaceJavaRMI interfaceRemota = (InterfaceJavaRMI) Naming.lookup(NOME_PEER);
+    //         // try {
+    //         //     interfaceRemota.alerta(idPeerPedinte - 1, ("RESPOSTA," + idPeerPedinte));
+    //         // } catch (RemoteException ex) {
+    //         //     Logger.getLogger(AlgoritmoRicartAgrawala.class.getName()).log(Level.SEVERE, null, ex);
+    //         // }
+    //     // }
+    // }
 
     public boolean pedirAo(String nomeDoPedinte, int recurso,LocalDateTime horaDoPedido) throws NotBoundException, MalformedURLException, RemoteException {
         System.out.println("Pedido para utilizar o recurso " + recurso +  " ao " + nomeDoPedinte);

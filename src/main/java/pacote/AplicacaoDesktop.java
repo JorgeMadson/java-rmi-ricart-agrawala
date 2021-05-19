@@ -34,7 +34,7 @@ public class AplicacaoDesktop {
     // Botoes
     static JButton peer1PedirSCRecurso1;
     static JButton peer2PedirSCRecurso1;
-    static JButton peer3PedirSCReCurso1;
+    static JButton peer3PedirSCRecurso1;
 
     static JButton peer1PedirSCRecurso2;
     static JButton peer2PedirSCRecurso2;
@@ -91,7 +91,12 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer1.perguntarSePossoEntrarNaSC(1);
+                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer1.perguntarSePossoEntrarNaSC(1);
+                    if (recursoEstaSendoUsado == false) {
+                        AplicacaoDesktop.peer1.recurso1EstaSendoUtilizado = true;
+                        estadoRecurso1.setText("Recurso 1: Peer 1 usando");
+                    }
+
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                     Logger.getLogger(AplicacaoDesktop.class.getName()).log(Level.SEVERE, null, ex);
@@ -102,18 +107,26 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer2.perguntarSePossoEntrarNaSC(1);
+                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer2.perguntarSePossoEntrarNaSC(1);
+                    if (recursoEstaSendoUsado == false) {
+                        AplicacaoDesktop.peer2.recurso1EstaSendoUtilizado = true;
+                        estadoRecurso1.setText("Recurso 1: Peer 2 usando");
+                    }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                     Logger.getLogger(AplicacaoDesktop.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
-        peer3PedirSCReCurso1.addActionListener(new ActionListener() {
+        peer3PedirSCRecurso1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer3.perguntarSePossoEntrarNaSC(1);
+                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer3.perguntarSePossoEntrarNaSC(1);
+                    if (recursoEstaSendoUsado == false) {
+                        AplicacaoDesktop.peer3.recurso1EstaSendoUtilizado = true;
+                        estadoRecurso1.setText("Recurso 1: Peer 3 usando");
+                    }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                 }
@@ -123,7 +136,11 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer1.perguntarSePossoEntrarNaSC(2);
+                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer1.perguntarSePossoEntrarNaSC(2);
+                    if (recursoEstaSendoUsado == false) {
+                        AplicacaoDesktop.peer1.recurso2EstaSendoUtilizado = true;
+                        estadoRecurso2.setText("Recurso 2: Peer 1 usando");
+                    }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                     Logger.getLogger(AplicacaoDesktop.class.getName()).log(Level.SEVERE, null, ex);
@@ -134,7 +151,11 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer2.perguntarSePossoEntrarNaSC(2);
+                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer2.perguntarSePossoEntrarNaSC(2);
+                    if (recursoEstaSendoUsado == false) {
+                        AplicacaoDesktop.peer2.recurso2EstaSendoUtilizado = true;
+                        estadoRecurso2.setText("Recurso 2: Peer 2 usando");
+                    }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                     Logger.getLogger(AplicacaoDesktop.class.getName()).log(Level.SEVERE, null, ex);
@@ -145,7 +166,11 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer3.perguntarSePossoEntrarNaSC(2);
+                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer3.perguntarSePossoEntrarNaSC(2);
+                    if (recursoEstaSendoUsado == false) {
+                        AplicacaoDesktop.peer3.recurso2EstaSendoUtilizado = true;
+                        estadoRecurso2.setText("Recurso 2: Peer 3 usando");
+                    }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                 }
@@ -153,11 +178,19 @@ public class AplicacaoDesktop {
         });
 
         // LiberarSC
+        //Recurso 1
         peer1LiberarSCRecurso1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer1.liberarSC();
+                    System.out.println("\nPeer1 quer liberar o recurso 1");
+                    if (AplicacaoDesktop.peer1.recurso1EstaSendoUtilizado == true) {
+                        AplicacaoDesktop.peer1.liberarSC(1);
+                        estadoRecurso1.setText("Recurso 1: Livre");
+                    }
+                    else {
+                        System.out.println("Não é esse peer que está usando");
+                    }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                 }
@@ -167,7 +200,14 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer2.liberarSC();
+                    System.out.println("\nPeer2 quer liberar o recurso 1");
+                    if (AplicacaoDesktop.peer2.recurso1EstaSendoUtilizado == true) {
+                        AplicacaoDesktop.peer2.liberarSC(1);
+                        estadoRecurso1.setText("Recurso 1: Livre");
+                    }
+                    else {
+                        System.out.println("Não é esse peer que está usando");
+                    }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                 }
@@ -177,7 +217,67 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AplicacaoDesktop.peer3.liberarSC();
+                    System.out.println("\nPeer3 quer liberar o recurso 1");
+                    if (AplicacaoDesktop.peer3.recurso1EstaSendoUtilizado == true) {
+                        AplicacaoDesktop.peer3.liberarSC(1);
+                        estadoRecurso1.setText("Recurso 1: Livre");
+                    }
+                    else {
+                        System.out.println("Não é esse peer que está usando");
+                    }
+                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
+                    System.out.println(ex);
+                }
+            }
+        });
+
+        //Recurso 2
+        peer1LiberarSCRecurso2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    System.out.println("\nPeer1 quer liberar o recurso 2");
+                    if (AplicacaoDesktop.peer1.recurso2EstaSendoUtilizado == true) {
+                        AplicacaoDesktop.peer1.liberarSC(2);
+                        estadoRecurso2.setText("Recurso 2: Livre");
+                    }
+                    else {
+                        System.out.println("Não é esse peer que está usando");
+                    }
+                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
+                    System.out.println(ex);
+                }
+            }
+        });
+        peer2LiberarSCRecurso2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    System.out.println("\nPeer2 quer liberar o recurso 2");
+                    if (AplicacaoDesktop.peer2.recurso2EstaSendoUtilizado == true) {
+                        AplicacaoDesktop.peer2.liberarSC(2);
+                        estadoRecurso2.setText("Recurso 2: Livre");
+                    }
+                    else {
+                        System.out.println("Não é esse peer que está usando");
+                    }
+                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
+                    System.out.println(ex);
+                }
+            }
+        });
+        peer3LiberarSCRecurso2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    System.out.println("\nPeer3 quer liberar o recurso 2");
+                    if (AplicacaoDesktop.peer3.recurso2EstaSendoUtilizado == true) {
+                        AplicacaoDesktop.peer3.liberarSC(2);
+                        estadoRecurso2.setText("Recurso 2: Livre");
+                    }
+                    else {
+                        System.out.println("Não é esse peer que está usando");
+                    }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println(ex);
                 }
@@ -207,12 +307,12 @@ public class AplicacaoDesktop {
         f.add(liberarSessaoCritica);
         
         // Label peers
-        levantarPeer1 = new JLabel("Peer1");
-        levantarPeer1.setBounds(150, 50, 200, 20);// eixo x, eixo y, largura, altura
-        levantarPeer2 = new JLabel("Peer2");
-        levantarPeer2.setBounds(150, 75, 200, 20);// eixo x, eixo y, largura, altura
-        levantarPeer3 = new JLabel("Peer3");
-        levantarPeer3.setBounds(150, 100, 200, 20);// eixo x, eixo y, largura, altura
+        levantarPeer1 = new JLabel("| Peer1:");
+        levantarPeer1.setBounds(200, 50, 200, 20);// eixo x, eixo y, largura, altura
+        levantarPeer2 = new JLabel("| Peer2:");
+        levantarPeer2.setBounds(200, 75, 200, 20);// eixo x, eixo y, largura, altura
+        levantarPeer3 = new JLabel("| Peer3:");
+        levantarPeer3.setBounds(200, 100, 200, 20);// eixo x, eixo y, largura, altura
         f.add(levantarPeer1);
         f.add(levantarPeer2);
         f.add(levantarPeer3);
@@ -232,8 +332,8 @@ public class AplicacaoDesktop {
         peer1PedirSCRecurso1.setBounds(275, 50, 60, 20);// eixo x, eixo y, largura, altura
         peer2PedirSCRecurso1 = new JButton("► 1");
         peer2PedirSCRecurso1.setBounds(275, 75, 60, 20);// eixo x, eixo y, largura, altura
-        peer3PedirSCReCurso1 = new JButton("► 1");
-        peer3PedirSCReCurso1.setBounds(275, 100, 60, 20);// eixo x, eixo y, largura, altura
+        peer3PedirSCRecurso1 = new JButton("► 1");
+        peer3PedirSCRecurso1.setBounds(275, 100, 60, 20);// eixo x, eixo y, largura, altura
 
         // Botões pedir acesso a Sessão Crítica Recurso 2
         peer1PedirSCRecurso2 = new JButton("► 2");
@@ -265,10 +365,10 @@ public class AplicacaoDesktop {
 
         f.add(peer1PedirSCRecurso1);
         f.add(peer2PedirSCRecurso1);
-        f.add(peer3PedirSCReCurso1);
+        f.add(peer3PedirSCRecurso1);
         f.add(peer1PedirSCRecurso1);
         f.add(peer2PedirSCRecurso1);
-        f.add(peer3PedirSCReCurso1);
+        f.add(peer3PedirSCRecurso1);
 
         f.add(peer1PedirSCRecurso2);
         f.add(peer2PedirSCRecurso2);
