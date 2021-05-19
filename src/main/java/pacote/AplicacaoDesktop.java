@@ -8,8 +8,6 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 public class AplicacaoDesktop {
@@ -18,7 +16,7 @@ public class AplicacaoDesktop {
     private static AlgoritmoRicartAgrawala peer2;
     private static AlgoritmoRicartAgrawala peer3;
 
-    //JFrame para criar a janela
+    // JFrame para criar a janela
     static JFrame f;
 
     // Textos
@@ -77,8 +75,8 @@ public class AplicacaoDesktop {
             LocateRegistry.createRegistry(1099);
 
             Naming.rebind("Peer1", AplicacaoDesktop.peer1);
-            Naming.rebind("Peer3", AplicacaoDesktop.peer2);
-            Naming.rebind("Peer2", AplicacaoDesktop.peer3);
+            Naming.rebind("Peer2", AplicacaoDesktop.peer2);
+            Naming.rebind("Peer3", AplicacaoDesktop.peer3);
         } catch (MalformedURLException | RemoteException ex) {
             System.out.println("AplicacaoDesktop -> Disponibilizando porta");
             ex.printStackTrace();
@@ -98,8 +96,7 @@ public class AplicacaoDesktop {
                     }
 
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println(ex);
-                    Logger.getLogger(AplicacaoDesktop.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("peer1PedirSCRecurso1" + ex);
                 }
             }
         });
@@ -113,8 +110,7 @@ public class AplicacaoDesktop {
                         estadoRecurso1.setText("Recurso 1: Peer 2 usando");
                     }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println(ex);
-                    Logger.getLogger(AplicacaoDesktop.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("peer2PedirSCRecurso1" + ex);
                 }
             }
         });
@@ -128,7 +124,7 @@ public class AplicacaoDesktop {
                         estadoRecurso1.setText("Recurso 1: Peer 3 usando");
                     }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println(ex);
+                    System.out.println("peer3PedirSCRecurso1" + ex);
                 }
             }
         });
@@ -142,8 +138,7 @@ public class AplicacaoDesktop {
                         estadoRecurso2.setText("Recurso 2: Peer 1 usando");
                     }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println(ex);
-                    Logger.getLogger(AplicacaoDesktop.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("peer1PedirSCRecurso2" + ex);
                 }
             }
         });
@@ -157,8 +152,7 @@ public class AplicacaoDesktop {
                         estadoRecurso2.setText("Recurso 2: Peer 2 usando");
                     }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println(ex);
-                    Logger.getLogger(AplicacaoDesktop.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("peer2PedirSCRecurso2" + ex);
                 }
             }
         });
@@ -172,13 +166,13 @@ public class AplicacaoDesktop {
                         estadoRecurso2.setText("Recurso 2: Peer 3 usando");
                     }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println(ex);
+                    System.out.println("peer3PedirSCReCurso2" + ex);
                 }
             }
         });
 
         // LiberarSC
-        //Recurso 1
+        // Recurso 1
         peer1LiberarSCRecurso1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -187,12 +181,11 @@ public class AplicacaoDesktop {
                     if (AplicacaoDesktop.peer1.recurso1EstaSendoUtilizado == true) {
                         AplicacaoDesktop.peer1.liberarSC(1);
                         estadoRecurso1.setText("Recurso 1: Livre");
-                    }
-                    else {
+                    } else {
                         System.out.println("Não é esse peer que está usando");
                     }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println(ex);
+                    System.out.println("peer1LiberarSCRecurso1" + ex);
                 }
             }
         });
@@ -204,12 +197,11 @@ public class AplicacaoDesktop {
                     if (AplicacaoDesktop.peer2.recurso1EstaSendoUtilizado == true) {
                         AplicacaoDesktop.peer2.liberarSC(1);
                         estadoRecurso1.setText("Recurso 1: Livre");
-                    }
-                    else {
+                    } else {
                         System.out.println("Não é esse peer que está usando");
                     }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println(ex);
+                    System.out.println("peer2LiberarSCRecurso1" + ex);
                 }
             }
         });
@@ -221,17 +213,16 @@ public class AplicacaoDesktop {
                     if (AplicacaoDesktop.peer3.recurso1EstaSendoUtilizado == true) {
                         AplicacaoDesktop.peer3.liberarSC(1);
                         estadoRecurso1.setText("Recurso 1: Livre");
-                    }
-                    else {
+                    } else {
                         System.out.println("Não é esse peer que está usando");
                     }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println(ex);
+                    System.out.println("peer3LiberarSCRecurso1" + ex);
                 }
             }
         });
 
-        //Recurso 2
+        // Recurso 2
         peer1LiberarSCRecurso2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -240,12 +231,11 @@ public class AplicacaoDesktop {
                     if (AplicacaoDesktop.peer1.recurso2EstaSendoUtilizado == true) {
                         AplicacaoDesktop.peer1.liberarSC(2);
                         estadoRecurso2.setText("Recurso 2: Livre");
-                    }
-                    else {
+                    } else {
                         System.out.println("Não é esse peer que está usando");
                     }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println(ex);
+                    System.out.println("peer1LiberarSCRecurso2" + ex);
                 }
             }
         });
@@ -257,12 +247,11 @@ public class AplicacaoDesktop {
                     if (AplicacaoDesktop.peer2.recurso2EstaSendoUtilizado == true) {
                         AplicacaoDesktop.peer2.liberarSC(2);
                         estadoRecurso2.setText("Recurso 2: Livre");
-                    }
-                    else {
+                    } else {
                         System.out.println("Não é esse peer que está usando");
                     }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println(ex);
+                    System.out.println("peer2LiberarSCRecurso2" + ex);
                 }
             }
         });
@@ -274,12 +263,11 @@ public class AplicacaoDesktop {
                     if (AplicacaoDesktop.peer3.recurso2EstaSendoUtilizado == true) {
                         AplicacaoDesktop.peer3.liberarSC(2);
                         estadoRecurso2.setText("Recurso 2: Livre");
-                    }
-                    else {
+                    } else {
                         System.out.println("Não é esse peer que está usando");
                     }
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println(ex);
+                    System.out.println("peer3LiberarSCRecurso2" + ex);
                 }
             }
         });
@@ -305,7 +293,7 @@ public class AplicacaoDesktop {
         liberarSessaoCritica = new JLabel("Liberar Sessão Crítica");
         liberarSessaoCritica.setBounds(500, 30, 250, 15);// eixo x, eixo y, largura, altura
         f.add(liberarSessaoCritica);
-        
+
         // Label peers
         levantarPeer1 = new JLabel("| Peer1:");
         levantarPeer1.setBounds(200, 50, 200, 20);// eixo x, eixo y, largura, altura
@@ -316,11 +304,11 @@ public class AplicacaoDesktop {
         f.add(levantarPeer1);
         f.add(levantarPeer2);
         f.add(levantarPeer3);
-        
+
         estadoRecurso1 = new JLabel("Recurso 1: Livre");
         estadoRecurso1.setBounds(25, 50, 200, 30);// eixo x, eixo y, largura, altura
         f.add(estadoRecurso1);
-        
+
         estadoRecurso2 = new JLabel("Recurso 2: Livre");
         estadoRecurso2.setBounds(25, 75, 200, 30);// eixo x, eixo y, largura, altura
         f.add(estadoRecurso2);
