@@ -26,7 +26,6 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
     public String recurso2EstaSendoUtilizado = "released";
 
     // Comunicação pelo Java RMi
-
     // Serão 3 peers por enquanto
     public int numeroDePeers = 3;
 
@@ -39,7 +38,6 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
         respostasPendentes = numeroDePeers;
 
         // this.idDoPeer = numSeq;
-
         // Comunicação pelo Java RMi
         // Fazer a fila
         // Numeros do nó também é usado para prioridade (baixo nó = maior prioridade no
@@ -48,7 +46,7 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
         // tem que ficar atento com erros ao tentar acessar o nó '0'.
         this.meuId = nomeDoPeer;
         // Implementar de uma forma melhor ao pedido de liberar a SC
-        Arrays.fill(respostaAdiada, true);
+        // Arrays.fill(respostaAdiada, true);
     }
 
     /**
@@ -70,28 +68,25 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
             String respostaPeer2 = pedirAo("Peer2", recurso, horaDeAgora); // vai responder: held, wanted ou released
             String respostaPeer3 = pedirAo("Peer3", recurso, horaDeAgora);
 
-            //Se os outros dois peers não estão usando nem querendo usar, eu uso.
+            // Se os outros dois peers não estão usando nem querendo usar, eu uso.
             boolean recursoEstaLiberado = respostaPeer2 != AlgoritmoRicartAgrawala.released && respostaPeer3 != AlgoritmoRicartAgrawala.released;
 
             System.out.println("Recurso " + recurso + " está livre!");
             if (recursoEstaLiberado) {
-                //Mudo o estado do recurso para held
+                // Mudo o estado do recurso para held
                 mudarEstadoDoRecurso(recurso, AlgoritmoRicartAgrawala.held);
                 return true;
             }
-            boolean recursoEstaSendoUsado = respostaPeer2 != AlgoritmoRicartAgrawala.held
-                    || respostaPeer2 != AlgoritmoRicartAgrawala.held;
+            boolean recursoEstaSendoUsado = respostaPeer2 != AlgoritmoRicartAgrawala.held || respostaPeer3 != AlgoritmoRicartAgrawala.held;
             // então vou ficar na fila esperando quando liberar
-            boolean querUsarORecursoTambem = respostaPeer2 != AlgoritmoRicartAgrawala.wanted
-                    || respostaPeer2 != AlgoritmoRicartAgrawala.wanted;
+            boolean querUsarORecursoTambem = respostaPeer2 != AlgoritmoRicartAgrawala.wanted || respostaPeer2 != AlgoritmoRicartAgrawala.wanted;
             // ver quem pediu primeiro
         }
         if (meuId == "Peer2") {
             String respostaPeer1 = pedirAo("Peer1", recurso, horaDeAgora); // vai responder: held, wanted ou released
             String respostaPeer3 = pedirAo("Peer3", recurso, horaDeAgora);
 
-            boolean recursoEstaLiberado = respostaPeer1 != AlgoritmoRicartAgrawala.released
-                    && respostaPeer3 != AlgoritmoRicartAgrawala.released;
+            boolean recursoEstaLiberado = respostaPeer1 != AlgoritmoRicartAgrawala.released && respostaPeer3 != AlgoritmoRicartAgrawala.released;
             System.out.println("Recurso " + recurso + " está livre!");
             if (recursoEstaLiberado) {
                 mudarEstadoDoRecurso(recurso, AlgoritmoRicartAgrawala.held);
@@ -108,7 +103,7 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
             String respostaPeer1 = pedirAo("Peer1", recurso, horaDeAgora); // vai responder: held, wanted ou released
             String respostaPeer2 = pedirAo("Peer2", recurso, horaDeAgora);
 
-            //Se os outros dois peers não estão usando nem querendo usar, eu uso.
+            // Se os outros dois peers não estão usando nem querendo usar, eu uso.
             boolean recursoEstaLiberado = respostaPeer1 != AlgoritmoRicartAgrawala.released
                     && respostaPeer2 != AlgoritmoRicartAgrawala.released;
 
@@ -126,7 +121,6 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
         }
 
         //
-
         // Se a resposta for FALSE nenhum peer está usando
         // Se for TRUE algum peer está usando
         // Então esse peer tem que liberar o recurso
@@ -153,7 +147,6 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
         }
 
         // solicitandoCS = false;
-
         // for (int i = 0; i < numeroDePeers - 1; i++) {
         // if (respostaAdiada[i]) {
         // respostaAdiada[i] = false;
@@ -177,7 +170,6 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
     // NotBoundException, MalformedURLException, RemoteException {
     // System.out.println("Pedido recebido do peer" + numNoRecebido);
     // // boolean bDefer = false;
-
     // maiorNumSeq = Math.max(maiorNumSeq, seqNumRecebido);
     // // bDefer = solicitandoCS && ((seqNumRecebido > idDoPeer) || (seqNumRecebido
     // == idDoPeer && numNoRecebido > meuId));
@@ -192,9 +184,7 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
     // // System.out.println("Mensagem de resposta enviada para" + numNoRecebido);
     // // responderAo(numNoRecebido);
     // // }
-
     // }
-
     /**
      * Recebendo Respostas
      */
@@ -202,7 +192,6 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
     // respostasPendentes = Math.max((respostasPendentes - 1), 0);
     // //System.out.println("Outstanding replies: " + respostasPendentes);
     // }
-
     // public void responderAo(int idPeerPedinte) throws NotBoundException,
     // MalformedURLException, RemoteException {
     // System.out.println("enviado RESPOSTA ao Peer " + idPeerPedinte);
@@ -230,7 +219,6 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
     // // }
     // // }
     // }
-
     public String pedirAo(String nomeDoPedinte, int recurso, LocalDateTime horaDoPedido)
             throws NotBoundException, MalformedURLException, RemoteException {
         System.out.println("Pedido para utilizar o recurso " + recurso + " ao " + nomeDoPedinte);
@@ -242,10 +230,11 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
 
     @Override
     public String estadoDoRecurso(int idDoRecurso) {
-        if (idDoRecurso == 1)
+        if (idDoRecurso == 1) {
             return this.recurso1EstaSendoUtilizado;
-        else
+        } else {
             return this.recurso2EstaSendoUtilizado;
+        }
     }
 
 }
