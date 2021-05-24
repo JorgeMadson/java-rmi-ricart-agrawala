@@ -15,13 +15,13 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
     public int idDoPeer;
     public String meuId;
 
-    private class Fila {
+    public class Fila {
         public Fila(String peer, LocalDateTime horaDoEvento) {
             this.peer = peer;
             this.horaDoPedido = horaDoEvento;
         }
-        String peer;
-        LocalDateTime horaDoPedido;
+        public String peer;
+        public LocalDateTime horaDoPedido;
     }
 
     // Os três estados do recurso são:
@@ -79,15 +79,17 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
             if (recursoEstaLiberado) {
                 // Mudo o estado do recurso para held
                 mudarEstadoDoRecurso(recurso, AlgoritmoRicartAgrawala.held);
+                removerDaPrimeroDaFila(recurso);
                 return true;
             }
 
             //Caso esteja sendo usado
-            boolean recursoEstaSendoUsado = respostaPeer2 == AlgoritmoRicartAgrawala.held || respostaPeer3 == AlgoritmoRicartAgrawala.held;
+            // boolean recursoEstaSendoUsado = respostaPeer2 == AlgoritmoRicartAgrawala.held || respostaPeer3 == AlgoritmoRicartAgrawala.held;
             // então vou ficar na fila esperando quando liberar
             filaDePeers.add(new Fila(meuId, horaDeAgora));
+            return false;
 
-            boolean querUsarORecursoTambem = respostaPeer2 == AlgoritmoRicartAgrawala.wanted || respostaPeer2 == AlgoritmoRicartAgrawala.wanted;
+            // boolean querUsarORecursoTambem = respostaPeer2 == AlgoritmoRicartAgrawala.wanted || respostaPeer2 == AlgoritmoRicartAgrawala.wanted;
             // ver quem pediu primeiro
         }
         if (meuId == "Peer2") {
@@ -100,12 +102,12 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
                 mudarEstadoDoRecurso(recurso, AlgoritmoRicartAgrawala.held);
                 return true;
             }
-            boolean recursoEstaSendoUsado = respostaPeer1 != AlgoritmoRicartAgrawala.held
-                    || respostaPeer1 != AlgoritmoRicartAgrawala.held;
+            // boolean recursoEstaSendoUsado = respostaPeer1 != AlgoritmoRicartAgrawala.held || respostaPeer1 != AlgoritmoRicartAgrawala.held;
             // então vou ficar na fila esperando quando liberar
-            boolean querUsarORecursoTambem = respostaPeer1 != AlgoritmoRicartAgrawala.wanted
-                    || respostaPeer1 != AlgoritmoRicartAgrawala.wanted;
+            // boolean querUsarORecursoTambem = respostaPeer1 != AlgoritmoRicartAgrawala.wanted || respostaPeer1 != AlgoritmoRicartAgrawala.wanted;
             // ver quem pediu primeiro
+            filaDePeers.add(new Fila(meuId, horaDeAgora));
+            return false;
         }
         if (meuId == "Peer3") {
             String respostaPeer1 = pedirAo("Peer1", recurso, horaDeAgora); // vai responder: held, wanted ou released
@@ -120,12 +122,12 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
                 mudarEstadoDoRecurso(recurso, AlgoritmoRicartAgrawala.held);
                 return true;
             }
-            boolean recursoEstaSendoUsado = respostaPeer1 != AlgoritmoRicartAgrawala.held
-                    || respostaPeer1 != AlgoritmoRicartAgrawala.held;
+            // boolean recursoEstaSendoUsado = respostaPeer1 != AlgoritmoRicartAgrawala.held || respostaPeer1 != AlgoritmoRicartAgrawala.held;
             // então vou ficar na fila esperando quando liberar
-            boolean querUsarORecursoTambem = respostaPeer2 != AlgoritmoRicartAgrawala.wanted
-                    || respostaPeer2 != AlgoritmoRicartAgrawala.wanted;
+            // boolean querUsarORecursoTambem = respostaPeer2 != AlgoritmoRicartAgrawala.wanted || respostaPeer2 != AlgoritmoRicartAgrawala.wanted;
             // ver quem pediu primeiro
+            filaDePeers.add(new Fila(meuId, horaDeAgora));
+            return false;
         }
 
         //
@@ -154,6 +156,8 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
             this.recurso2EstaSendoUtilizado = AlgoritmoRicartAgrawala.released;
         }
 
+        removerDaPrimeroDaFila(qualRecurso);
+
         // solicitandoCS = false;
         // for (int i = 0; i < numeroDePeers - 1; i++) {
         // if (filaDePeers[i]new Fila[3]{
@@ -165,6 +169,14 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
         // // }
         // }
         // }
+    }
+
+    private void removerDaPrimeroDaFila(int qualRecurso) {
+        if (AlgoritmoRicartAgrawala.filaDePeers.size() > 0) {
+            AlgoritmoRicartAgrawala.filaDePeers.get(0);
+            mudarEstadoDoRecurso(qualRecurso, AlgoritmoRicartAgrawala.held);
+            AlgoritmoRicartAgrawala.filaDePeers.remove(0);
+        }
     }
 
     /**

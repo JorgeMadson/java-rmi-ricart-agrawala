@@ -24,8 +24,10 @@ public class AplicacaoDesktop {
     static JLabel levantarPeer1;
     static JLabel levantarPeer2;
     static JLabel levantarPeer3;
-    static JLabel estadoRecurso1;
-    static JLabel estadoRecurso2;
+
+    static JLabel[] estadoRecurso = new JLabel[2];
+
+    static JLabel[][] estadoPeerRecurso = new JLabel[3][2];
 
     // Botoes
     static JButton peer1PedirSCRecurso1;
@@ -43,6 +45,10 @@ public class AplicacaoDesktop {
     static JButton peer1LiberarSCRecurso2;
     static JButton peer2LiberarSCRecurso2;
     static JButton peer3LiberarSCRecurso2;
+
+    //Fila
+    static JLabel tituloFila;
+    static JLabel fila;
 
     public static void main(String[] args) throws AlreadyBoundException {
 
@@ -104,16 +110,22 @@ public class AplicacaoDesktop {
 
     }
 
-    static ActionListener peerPedindoSCNoRecurso(int peer ,int recurso) {
+    static ActionListener peerPedindoSCNoRecurso(int peer, int recurso) {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer[peer-1].perguntarSePossoEntrarNaSC(recurso);
-                    if (recursoEstaSendoUsado == false) {
-                        AplicacaoDesktop.peer[peer-1].recurso1EstaSendoUtilizado = AlgoritmoRicartAgrawala.held;
-                        estadoRecurso1.setText("Recurso " +recurso+": Peer "+peer+" usando");
+                    fila.setText(valorDaFila());
+                    if (AplicacaoDesktop.peer[peer-1].perguntarSePossoEntrarNaSC(recurso)) {
+                        if(recurso ==1) {
+                            AplicacaoDesktop.peer[peer-1].recurso1EstaSendoUtilizado = AlgoritmoRicartAgrawala.held;
+                        } else {
+                            AplicacaoDesktop.peer[peer-1].recurso2EstaSendoUtilizado = AlgoritmoRicartAgrawala.held;
+                        }
+                        estadoRecurso[recurso-1].setText("Recurso " +recurso+": Peer "+peer+" usando");
                     }
+                    // estadoPeerRecurso[peer-1][recurso-1].setText(AplicacaoDesktop.peer[peer-1].estadoDoRecurso(recurso));
+                    fila.setText(valorDaFila());
                     
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println("peer"+peer+"PedirSCRecurso"+recurso+ ex);
@@ -127,15 +139,27 @@ public class AplicacaoDesktop {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                    fila.setText(valorDaFila());
                     System.out.println("\nPeer1 quer liberar o recurso 1");
-                    if (AplicacaoDesktop.peer[peer-1].recurso1EstaSendoUtilizado == AlgoritmoRicartAgrawala.held) {
-                        AplicacaoDesktop.peer[peer-1].liberarSC(recurso);
-                        estadoRecurso1.setText("Recurso 1: Livre");
+                    if (recurso == 1) {
+                        if (AplicacaoDesktop.peer[peer-1].recurso1EstaSendoUtilizado == AlgoritmoRicartAgrawala.held) {
+                            AplicacaoDesktop.peer[peer-1].liberarSC(recurso);
+                            estadoRecurso[recurso-1].setText("Recurso 1: Livre");
+                        } else {
+                            System.out.println("Não é esse peer que está usando");
+                        }
                     } else {
-                        System.out.println("Não é esse peer que está usando");
+                        if (AplicacaoDesktop.peer[peer-1].recurso2EstaSendoUtilizado == AlgoritmoRicartAgrawala.held) {
+                            AplicacaoDesktop.peer[peer-1].liberarSC(recurso);
+                            estadoRecurso[recurso-1].setText("Recurso 2: Livre");
+                        } else {
+                            System.out.println("Não é esse peer que está usando");
+                        }
                     }
+                    
+                    fila.setText(valorDaFila());
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println("peer1LiberarSCRecurso1" + ex);
+                    System.out.println("peerLiberandoRecurso" + peer + recurso + ex);
                 }
             }
         };
@@ -162,23 +186,32 @@ public class AplicacaoDesktop {
         f.add(liberarSessaoCritica);
 
         // Label peers
-        levantarPeer1 = new JLabel("| Peer1:");
-        levantarPeer1.setBounds(200, 50, 200, 20);// eixo x, eixo y, largura, altura
-        levantarPeer2 = new JLabel("| Peer2:");
-        levantarPeer2.setBounds(200, 75, 200, 20);// eixo x, eixo y, largura, altura
-        levantarPeer3 = new JLabel("| Peer3:");
-        levantarPeer3.setBounds(200, 100, 200, 20);// eixo x, eixo y, largura, altura
+        levantarPeer1 = new JLabel("Peer1:");
+        levantarPeer1.setBounds(25, 50, 200, 20);// eixo x, eixo y, largura, altura
+        levantarPeer2 = new JLabel("Peer2:");
+        levantarPeer2.setBounds(25, 75, 200, 20);// eixo x, eixo y, largura, altura
+        levantarPeer3 = new JLabel("Peer3:");
+        levantarPeer3.setBounds(25, 100, 200, 20);// eixo x, eixo y, largura, altura
         f.add(levantarPeer1);
         f.add(levantarPeer2);
         f.add(levantarPeer3);
 
-        estadoRecurso1 = new JLabel("Recurso 1: Livre");
-        estadoRecurso1.setBounds(25, 50, 200, 30);// eixo x, eixo y, largura, altura
-        f.add(estadoRecurso1);
+        estadoRecurso[0] = new JLabel("Recurso 1: Livre");
+        estadoRecurso[0].setBounds(25, 150, 200, 30);// eixo x, eixo y, largura, altura
+        f.add(estadoRecurso[0]);
 
-        estadoRecurso2 = new JLabel("Recurso 2: Livre");
-        estadoRecurso2.setBounds(25, 75, 200, 30);// eixo x, eixo y, largura, altura
-        f.add(estadoRecurso2);
+        estadoRecurso[1] = new JLabel("Recurso 2: Livre");
+        estadoRecurso[1].setBounds(25, 175, 200, 30);// eixo x, eixo y, largura, altura
+        f.add(estadoRecurso[1]);
+
+        //Fila:
+        tituloFila = new JLabel("Fila:");
+        tituloFila.setBounds(25, 200, 100, 30);
+        f.add(tituloFila);
+
+        fila = new JLabel(String.valueOf(AlgoritmoRicartAgrawala.filaDePeers));
+        fila.setBounds(25, 225, 500, 30);
+        f.add(fila);
 
         // Botões-------------------------------------------//
 
@@ -246,4 +279,7 @@ public class AplicacaoDesktop {
 
     }
 
+    static String valorDaFila() {
+        return String.valueOf(AlgoritmoRicartAgrawala.filaDePeers);
+    }
 }

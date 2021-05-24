@@ -4,51 +4,40 @@ const cors = require('cors');
 
 const app = express();
 
+//Recursos
+let estadosDoRecurso = { released: "released", held: "held", wanted: "wanted" };
+let recurso = estadosDoRecurso.released;
+let filaParaUsarORecurso = [];
+let listaDePeers = [];
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/', (requisicao, resposta) => {
-    const headers = {
-        'Content-Type': 'text/html'
-    };
-    resposta.writeHead(200, headers);
+//endpoint que mostra os eventos
+app.get('/recursos', receberRequisicoes);
 
-    const instrucoes = `<p>Ouvindo em http://localhost:${PORTA}</p>
-  <p>Mostrados numero de peers conectados em <a href="http://localhost:${PORTA}/peersConectados">http://localhost:${PORTA}/peersConectados</p>
-  <p>Mostrados dados enviados em <a href="http://localhost:${PORTA}/dadosEnviados">http://localhost:${PORTA}/dadosEnviados</p>
-  <p>Para enviar use o index.html ou faca um post em <a href="http://localhost:${PORTA}/enviarDados">http://localhost:${PORTA}/enviarDados</p>
-  `
-
-    resposta.write(instrucoes);
-})
-
-app.get('/peersConectados', (requisicao, resposta) => resposta.json({ peers: filaParaUsarORecurso.length }));
-
-const PORTA = 3000;
-
-let filaParaUsarORecurso = [];
-let dadosEnviados = [];
-
-app.listen(PORTA, () => {
-    console.log(`Ouvindo em http://localhost:${PORTA}
-  Mostrados numero de peers conectados em http://localhost:${PORTA}/peersConectados
-  Mostrados dados enviados em http://localhost:${PORTA}/dadosEnviados
-  Para enviar use o index.html ou faça um post em http://localhost:${PORTA}/enviarDados
-  `);
-});
-
-// 
+// Essa é a parte principal
 function receberRequisicoes(requisicao, resposta, proximo) {
     const headers = {
         'Content-Type': 'text/event-stream',
         'Connection': 'keep-alive',
         'Cache-Control': 'no-cache'
     };
+    //Só os cabeçalhos
     resposta.writeHead(200, headers);
 
-    const dado = `dados: ${JSON.stringify(dadosEnviados)}\n\n`;
+    const dado = `dados: ${JSON.stringify(recurso)}\n\n`;
+    if (requisicao.query.token) {
+        if (recurso == estadosDoRecurso.released) {
+            recurso = estadosDoRecurso.held;
+        }
+        if (recurso == estadosDoRecurso.held) {
+            filaParaUsarORecurso.push({ token: requisicao.query.token });
+        }
+    }
 
+    //Aqui é a resposta:
     resposta.write(dado);
 
     const peerId = Date.now();
@@ -58,12 +47,12 @@ function receberRequisicoes(requisicao, resposta, proximo) {
         resposta
     };
 
-    //Recebendo token
-    if (requisicao.body.token != '') {
-        //Cria um novo peer quando a conexão é aberta e o token está certo
-        filaParaUsarORecurso.push(novopeer);
+    //metodo que a cada segundo checa de o recurso está livre se estiver avisa em broadcast
+    setTimeout(function checaSeRecursoLivreEAvisa() {
+        if (filaParaUsarORecurso.length > 0) {
 
-    }
+        }
+    }, 1000);
 
 
     //Remove o peer quando a conexão é fechada
@@ -75,18 +64,45 @@ function receberRequisicoes(requisicao, resposta, proximo) {
 
 let token = Math.random();
 
-//endpoint que mostra os eventos
-app.get('/dadosEnviados', receberRequisicoes);
+
+
+//Outra partes apenas para mostrar informção
+app.get('/', (requisicao, resposta) => {
+    const headers = {
+        'Content-Type': 'text/html'
+    };
+    resposta.writeHead(200, headers);
+
+    const instrucoes = `<p>Ouvindo em http://localhost:${PORTA}</p>
+  <p>Mostrados numero de peers conectados em <a href="http://localhost:${PORTA}/peersConectados">http://localhost:${PORTA}/peersConectados</p>
+  <p>Mostrados dados enviados em <a href="http://localhost:${PORTA}/recursos">http://localhost:${PORTA}/recursos</p>
+  <p>Para enviar use o index.html ou faca um get em <a href="http://localhost:${PORTA}/acessarRecurso?token=meuId">http://localhost:${PORTA}/acessarRecurso?token=meuId</p>
+  `
+
+    resposta.write(instrucoes);
+})
+
+app.get('/peersConectados', (requisicao, resposta) => resposta.json({ peers: filaParaUsarORecurso.length }));
+
+const PORTA = 3000;
+
+app.listen(PORTA, () => {
+    console.log(`Ouvindo em http://localhost:${PORTA}
+  Mostrados numero de peers conectados em http://localhost:${PORTA}/peersConectados
+  Mostrados dados enviados em http://localhost:${PORTA}/recursos
+  Para enviar use o index.html ou faça um get em http://localhost:${PORTA}/acessarRecurso?token=meuId
+  `);
+});
 
 function mandarEventosParaTodos(novoFato) {
-    filaParaUsarORecurso.forEach(peer => peer.resposta.write(`dados: ${JSON.stringify(novoFato)}\n\n`));
+    listaDePeers.forEach(peer => peer.resposta.write(`dados: ${JSON.stringify(novoFato)}\n\n`));
 }
 
 async function adicionarDados(requisicao, resposta, proximo) {
-    const novoFato = requisicao.body;
-    dadosEnviados.push(novoFato);
-    resposta.json(novoFato);
-    return mandarEventosParaTodos(novoFato);
+    const token = requisicao.query.token;
+    listaDePeers.push(token);
+    resposta.json(token);
+    return mandarEventosParaTodos(token);
 }
 
-app.post('/enviarDados', adicionarDados);
+app.get('/acessarRecurso', adicionarDados);
