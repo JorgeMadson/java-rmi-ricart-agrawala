@@ -6,6 +6,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements InterfaceJavaRMI {
 
@@ -13,6 +14,15 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
     LocalDateTime horaDoPedido;
     public int idDoPeer;
     public String meuId;
+
+    private class Fila {
+        public Fila(String peer, LocalDateTime horaDoEvento) {
+            this.peer = peer;
+            this.horaDoPedido = horaDoEvento;
+        }
+        String peer;
+        LocalDateTime horaDoPedido;
+    }
 
     // Os três estados do recurso são:
     static String held = "held"; // (o processo está usando o recurso)
@@ -27,7 +37,7 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
     // Serão 3 peers por enquanto
     public int numeroDePeers = 3;
 
-    public static boolean[] respostaAdiada;
+    public static ArrayList<Fila> filaDePeers = new ArrayList<Fila>();
 
     public AlgoritmoRicartAgrawala(String nomeDoPeer) throws RemoteException {
 
@@ -42,14 +52,13 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
         // tem que ficar atento com erros ao tentar acessar o nó '0'.
         this.meuId = nomeDoPeer;
         // Implementar de uma forma melhor ao pedido de liberar a SC
-        // Arrays.fill(respostaAdiada, true);
+        // Arrays.fill(filaDePeers, trunew Fila[3];
     }
 
     /**
      * invocacao (inicio do modulo com requisição da CS)
      */
-    public boolean perguntarSePossoEntrarNaSC(int recurso)
-            throws NotBoundException, MalformedURLException, RemoteException {
+    public boolean perguntarSePossoEntrarNaSC(int recurso) throws NotBoundException, MalformedURLException, RemoteException {
 
         // Declarando que eu quero usar o recurso
         mudarEstadoDoRecurso(recurso, AlgoritmoRicartAgrawala.wanted);
@@ -57,7 +66,6 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
         System.out.println("\nO " + this.meuId + " está pedindo o recurso " + recurso);
 
         // fila de peers
-        respostaAdiada = new boolean[numeroDePeers];
         LocalDateTime horaDeAgora = LocalDateTime.now();
 
         if (meuId == "Peer1") {
@@ -65,7 +73,7 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
             String respostaPeer3 = pedirAo("Peer3", recurso, horaDeAgora);
 
             // Se os outros dois peers não estão usando nem querendo usar, eu uso.
-            boolean recursoEstaLiberado = respostaPeer2 != AlgoritmoRicartAgrawala.released && respostaPeer3 != AlgoritmoRicartAgrawala.released;
+            boolean recursoEstaLiberado = respostaPeer2 == AlgoritmoRicartAgrawala.released && respostaPeer3 == AlgoritmoRicartAgrawala.released;
 
             System.out.println("Recurso " + recurso + " está livre!");
             if (recursoEstaLiberado) {
@@ -73,9 +81,13 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
                 mudarEstadoDoRecurso(recurso, AlgoritmoRicartAgrawala.held);
                 return true;
             }
-            boolean recursoEstaSendoUsado = respostaPeer2 != AlgoritmoRicartAgrawala.held || respostaPeer3 != AlgoritmoRicartAgrawala.held;
+
+            //Caso esteja sendo usado
+            boolean recursoEstaSendoUsado = respostaPeer2 == AlgoritmoRicartAgrawala.held || respostaPeer3 == AlgoritmoRicartAgrawala.held;
             // então vou ficar na fila esperando quando liberar
-            boolean querUsarORecursoTambem = respostaPeer2 != AlgoritmoRicartAgrawala.wanted || respostaPeer2 != AlgoritmoRicartAgrawala.wanted;
+            filaDePeers.add(new Fila(meuId, horaDeAgora));
+
+            boolean querUsarORecursoTambem = respostaPeer2 == AlgoritmoRicartAgrawala.wanted || respostaPeer2 == AlgoritmoRicartAgrawala.wanted;
             // ver quem pediu primeiro
         }
         if (meuId == "Peer2") {
@@ -144,8 +156,8 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
 
         // solicitandoCS = false;
         // for (int i = 0; i < numeroDePeers - 1; i++) {
-        // if (respostaAdiada[i]) {
-        // respostaAdiada[i] = false;
+        // if (filaDePeers[i]new Fila[3]{
+        // filaDePeers[i] = falnew Fila[3];
         // // if (i < (meuId - 1)) {
         // // responderAo(i + 1);
         // // } else {
@@ -172,9 +184,9 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
     // // if (bDefer) {
     // // System.out.println("Envio diferido de mensagem para" + numNoRecebido);
     // // if (numNoRecebido > meuId) {
-    // // respostaAdiada[numNoRecebido - 2] = true;
+    // // filaDePeers[numNoRecebido - 2] = trnew Fila[3];
     // // } else {
-    // // respostaAdiada[numNoRecebido - 1] = true;
+    // // filaDePeers[numNoRecebido - 1] = trnew Fila[3];
     // // }
     // // } else {
     // // System.out.println("Mensagem de resposta enviada para" + numNoRecebido);
