@@ -6,11 +6,9 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements InterfaceJavaRMI {
 
-    public boolean solicitandoCS;
     public int respostasPendentes;
     LocalDateTime horaDoPedido;
     public int idDoPeer;
@@ -32,8 +30,6 @@ public class AlgoritmoRicartAgrawala extends UnicastRemoteObject implements Inte
     public static boolean[] respostaAdiada;
 
     public AlgoritmoRicartAgrawala(String nomeDoPeer) throws RemoteException {
-
-        solicitandoCS = false;
 
         respostasPendentes = numeroDePeers;
 

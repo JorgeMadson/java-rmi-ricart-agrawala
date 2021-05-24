@@ -12,9 +12,7 @@ import javax.swing.*;
 
 public class AplicacaoDesktop {
 
-    private static AlgoritmoRicartAgrawala peer1;
-    private static AlgoritmoRicartAgrawala peer2;
-    private static AlgoritmoRicartAgrawala peer3;
+    private static AlgoritmoRicartAgrawala[] peer = new AlgoritmoRicartAgrawala[3];
 
     // JFrame para criar a janela
     static JFrame f;
@@ -61,9 +59,9 @@ public class AplicacaoDesktop {
 
         // Levantando peers
         try {
-            AplicacaoDesktop.peer1 = new AlgoritmoRicartAgrawala("Peer1");
-            AplicacaoDesktop.peer2 = new AlgoritmoRicartAgrawala("Peer2");
-            AplicacaoDesktop.peer3 = new AlgoritmoRicartAgrawala("Peer3");
+            AplicacaoDesktop.peer[0] = new AlgoritmoRicartAgrawala("Peer1");
+            AplicacaoDesktop.peer[1] = new AlgoritmoRicartAgrawala("Peer2");
+            AplicacaoDesktop.peer[2] = new AlgoritmoRicartAgrawala("Peer3");
         } catch (Exception e1) {
 
             System.out.println("AplicacaoDesktop -> Levantando peers");
@@ -74,9 +72,9 @@ public class AplicacaoDesktop {
         try {
             LocateRegistry.createRegistry(1099);
 
-            Naming.rebind("Peer1", AplicacaoDesktop.peer1);
-            Naming.rebind("Peer2", AplicacaoDesktop.peer2);
-            Naming.rebind("Peer3", AplicacaoDesktop.peer3);
+            Naming.rebind("Peer1", AplicacaoDesktop.peer[0]);
+            Naming.rebind("Peer2", AplicacaoDesktop.peer[1]);
+            Naming.rebind("Peer3", AplicacaoDesktop.peer[2]);
         } catch (MalformedURLException | RemoteException ex) {
             System.out.println("AplicacaoDesktop -> Disponibilizando porta");
             ex.printStackTrace();
@@ -85,87 +83,53 @@ public class AplicacaoDesktop {
         // Ações dos botões-------------------------------------------//
 
         // PedirSC
-        peer1PedirSCRecurso1.addActionListener(peerPedindoSC(1,1));
-        peer2PedirSCRecurso1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer2.perguntarSePossoEntrarNaSC(1);
-                    if (recursoEstaSendoUsado == false) {
-                        AplicacaoDesktop.peer2.recurso1EstaSendoUtilizado = AlgoritmoRicartAgrawala.held;
-                        estadoRecurso1.setText("Recurso 1: Peer 2 usando");
-                    }
-                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println("peer2PedirSCRecurso1" + ex);
-                }
-            }
-        });
-        peer3PedirSCRecurso1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer3.perguntarSePossoEntrarNaSC(1);
-                    if (recursoEstaSendoUsado == false) {
-                        AplicacaoDesktop.peer3.recurso1EstaSendoUtilizado = AlgoritmoRicartAgrawala.held;
-                        estadoRecurso1.setText("Recurso 1: Peer 3 usando");
-                    }
-                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println("peer3PedirSCRecurso1" + ex);
-                }
-            }
-        });
-        peer1PedirSCRecurso2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer1.perguntarSePossoEntrarNaSC(2);
-                    if (recursoEstaSendoUsado == false) {
-                        AplicacaoDesktop.peer1.recurso2EstaSendoUtilizado = AlgoritmoRicartAgrawala.held;
-                        estadoRecurso2.setText("Recurso 2: Peer 1 usando");
-                    }
-                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println("peer1PedirSCRecurso2" + ex);
-                }
-            }
-        });
-        peer2PedirSCRecurso2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer2.perguntarSePossoEntrarNaSC(2);
-                    if (recursoEstaSendoUsado == false) {
-                        AplicacaoDesktop.peer2.recurso2EstaSendoUtilizado = AlgoritmoRicartAgrawala.held;
-                        estadoRecurso2.setText("Recurso 2: Peer 2 usando");
-                    }
-                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println("peer2PedirSCRecurso2" + ex);
-                }
-            }
-        });
-        peer3PedirSCReCurso2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer3.perguntarSePossoEntrarNaSC(2);
-                    if (recursoEstaSendoUsado == false) {
-                        AplicacaoDesktop.peer3.recurso2EstaSendoUtilizado = AlgoritmoRicartAgrawala.held;
-                        estadoRecurso2.setText("Recurso 2: Peer 3 usando");
-                    }
-                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println("peer3PedirSCReCurso2" + ex);
-                }
-            }
-        });
+        peer1PedirSCRecurso1.addActionListener(peerPedindoSCNoRecurso(1,1));
+        peer2PedirSCRecurso1.addActionListener(peerPedindoSCNoRecurso(2,1));
+        peer3PedirSCRecurso1.addActionListener(peerPedindoSCNoRecurso(3,1));
+
+        peer1PedirSCRecurso2.addActionListener(peerPedindoSCNoRecurso(1,2));
+        peer2PedirSCRecurso2.addActionListener(peerPedindoSCNoRecurso(2,2));
+        peer3PedirSCReCurso2.addActionListener(peerPedindoSCNoRecurso(3,2));
 
         // LiberarSC
         // Recurso 1
-        peer1LiberarSCRecurso1.addActionListener(new ActionListener() {
+        peer1LiberarSCRecurso1.addActionListener(peerLiberandoRecurso(1,1));
+        peer2LiberarSCRecurso1.addActionListener(peerLiberandoRecurso(2,1));
+        peer3LiberarSCRecurso1.addActionListener(peerLiberandoRecurso(3,1));
+
+        // Recurso 2
+        peer1LiberarSCRecurso2.addActionListener(peerLiberandoRecurso(1,2));
+        peer2LiberarSCRecurso2.addActionListener(peerLiberandoRecurso(2,2));
+        peer3LiberarSCRecurso2.addActionListener(peerLiberandoRecurso(3,2));
+
+    }
+
+    static ActionListener peerPedindoSCNoRecurso(int peer ,int recurso) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer[peer-1].perguntarSePossoEntrarNaSC(recurso);
+                    if (recursoEstaSendoUsado == false) {
+                        AplicacaoDesktop.peer[peer-1].recurso1EstaSendoUtilizado = AlgoritmoRicartAgrawala.held;
+                        estadoRecurso1.setText("Recurso " +recurso+": Peer "+peer+" usando");
+                    }
+                    
+                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
+                    System.out.println("peer"+peer+"PedirSCRecurso"+recurso+ ex);
+                }
+            }
+        };
+    }
+
+    static ActionListener peerLiberandoRecurso(int peer, int recurso) {
+        return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     System.out.println("\nPeer1 quer liberar o recurso 1");
-                    if (AplicacaoDesktop.peer1.recurso1EstaSendoUtilizado == AlgoritmoRicartAgrawala.held) {
-                        AplicacaoDesktop.peer1.liberarSC(1);
+                    if (AplicacaoDesktop.peer[peer-1].recurso1EstaSendoUtilizado == AlgoritmoRicartAgrawala.held) {
+                        AplicacaoDesktop.peer[peer-1].liberarSC(recurso);
                         estadoRecurso1.setText("Recurso 1: Livre");
                     } else {
                         System.out.println("Não é esse peer que está usando");
@@ -174,111 +138,10 @@ public class AplicacaoDesktop {
                     System.out.println("peer1LiberarSCRecurso1" + ex);
                 }
             }
-        });
-        peer2LiberarSCRecurso1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    System.out.println("\nPeer2 quer liberar o recurso 1");
-                    if (AplicacaoDesktop.peer2.recurso1EstaSendoUtilizado == AlgoritmoRicartAgrawala.held) {
-                        AplicacaoDesktop.peer2.liberarSC(1);
-                        estadoRecurso1.setText("Recurso 1: Livre");
-                    } else {
-                        System.out.println("Não é esse peer que está usando");
-                    }
-                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println("peer2LiberarSCRecurso1" + ex);
-                }
-            }
-        });
-        peer3LiberarSCRecurso1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    System.out.println("\nPeer3 quer liberar o recurso 1");
-                    if (AplicacaoDesktop.peer3.recurso1EstaSendoUtilizado == AlgoritmoRicartAgrawala.held) {
-                        AplicacaoDesktop.peer3.liberarSC(1);
-                        estadoRecurso1.setText("Recurso 1: Livre");
-                    } else {
-                        System.out.println("Não é esse peer que está usando");
-                    }
-                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println("peer3LiberarSCRecurso1" + ex);
-                }
-            }
-        });
-
-        // Recurso 2
-        peer1LiberarSCRecurso2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    System.out.println("\nPeer1 quer liberar o recurso 2");
-                    if (AplicacaoDesktop.peer1.recurso2EstaSendoUtilizado == AlgoritmoRicartAgrawala.held) {
-                        AplicacaoDesktop.peer1.liberarSC(2);
-                        estadoRecurso2.setText("Recurso 2: Livre");
-                    } else {
-                        System.out.println("Não é esse peer que está usando");
-                    }
-                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println("peer1LiberarSCRecurso2" + ex);
-                }
-            }
-        });
-        peer2LiberarSCRecurso2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    System.out.println("\nPeer2 quer liberar o recurso 2");
-                    if (AplicacaoDesktop.peer2.recurso2EstaSendoUtilizado == AlgoritmoRicartAgrawala.held) {
-                        AplicacaoDesktop.peer2.liberarSC(2);
-                        estadoRecurso2.setText("Recurso 2: Livre");
-                    } else {
-                        System.out.println("Não é esse peer que está usando");
-                    }
-                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println("peer2LiberarSCRecurso2" + ex);
-                }
-            }
-        });
-        peer3LiberarSCRecurso2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    System.out.println("\nPeer3 quer liberar o recurso 2");
-                    if (AplicacaoDesktop.peer3.recurso2EstaSendoUtilizado == AlgoritmoRicartAgrawala.held) {
-                        AplicacaoDesktop.peer3.liberarSC(2);
-                        estadoRecurso2.setText("Recurso 2: Livre");
-                    } else {
-                        System.out.println("Não é esse peer que está usando");
-                    }
-                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println("peer3LiberarSCRecurso2" + ex);
-                }
-            }
-        });
-
-    }
-
-    public static ActionListener peerPedindoSC(int peer ,int recurso) {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    boolean recursoEstaSendoUsado = AplicacaoDesktop.peer1.perguntarSePossoEntrarNaSC(recurso);
-                    if (recursoEstaSendoUsado == false) {
-                        AplicacaoDesktop.peer1.recurso1EstaSendoUtilizado = AlgoritmoRicartAgrawala.held;
-                        estadoRecurso1.setText("Recurso " +recurso+": Peer "+peer+" usando");
-                    }
-                    
-                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-                    System.out.println("peer1PedirSCRecurso"+recurso+ ex);
-                }
-            }
         };
     }
 
-    public static void executarParteVisual() {
+    static void executarParteVisual() {
         f = new JFrame();
 
         // Encerra a aplicação quando fechado
